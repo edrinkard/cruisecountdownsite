@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Cruise Countdown</title>
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/cotw/image/upload/v1785339426/anklo_vn5nyx.png">
+<link rel="apple-touch-icon" href="https://res.cloudinary.com/cotw/image/upload/v1785339426/anklo_vn5nyx.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── THEME TOKENS ── */
+:root {
+  /* shared */
+  --gold: #F5C842;
+  --gold-dim: #c9a330;
+  --foam: #F0F8FF;
+  --white: #ffffff;
+  --transition-speed: 0.6s;
+}
+
+/* ALASKA */
+.theme-alaska {
+  --bg1: #071828;
+  --bg2: #0d2a40;
+  --accent: #7ee8e8;
+  --accent2: #a8edea;
+  --porthole-bg1: #0c2535;
+  --porthole-bg2: #071828;
+  --porthole-border: #1e4a6a;
+  --porthole-ring1: #163650;
+  --porthole-ring2: #0c2535;
+  --water1: #0a2030;
+  --water2: #0f2e45;
+  --water3: #071828;
+  --wave-opacity: 1;
+  --text-sub: rgba(168, 237, 234, 0.55);
+  --badge-border: rgba(126, 232, 232, 0.25);
+  --progress-start: #7ee8e8;
+  --progress-end: #F5C842;
+  --eyebrow-color: #7ee8e8;
+  --moon-glow: rgba(168, 237, 234, 0.35);
+  --ship-hull: #1a3d5a;
+  --ship-super: #1e4a70;
+  --ship-bridge: #245a8e;
+}
+
+/* CARIBBEAN */
+.theme-caribbean {
+  --bg1: #021830;
+  --bg2: #052840;
+  --accent: #00d4aa;
+  --accent2: #ff7c5c;
+  --porthole-bg1: #073050;
+  --porthole-bg2: #021830;
+  --porthole-border: #0e4a6a;
+  --porthole-ring1: #0a3858;
+  --porthole-ring2: #052840;
+  --water1: #043a5a;
+  --water2: #0a5070;
+  --water3: #021830;
+  --text-sub: rgba(0, 212, 170, 0.55);
+  --badge-border: rgba(0, 212, 170, 0.25);
+  --progress-start: #00d4aa;
+  --progress-end: #ff7c5c;
+  --eyebrow-color: #00d4aa;
+  --moon-glow: rgba(255, 200, 80, 0.45);
+  --ship-hull: #1a3d5a;
+  --ship-super: #1e4a70;
+  --ship-bridge: #245a8e;
+}
+
+/* EUROPE */
+.theme-europe {
+  --bg1: #1a0e2e;
+  --bg2: #251542;
+  --accent: #c9a0e0;
+  --accent2: #e8b86d;
+  --porthole-bg1: #2a1850;
+  --porthole-bg2: #1a0e2e;
+  --porthole-border: #3d2570;
+  --porthole-ring1: #2e1c5a;
+  --porthole-ring2: #1a0e2e;
+  --water1: #1e1035;
+  --water2: #2a1848;
+  --water3: #1a0e2e;
+  --text-sub: rgba(201, 160, 224, 0.55);
+  --badge-border: rgba(201, 160, 224, 0.25);
+  --progress-start: #c9a0e0;
+  --progress-end: #e8b86d;
+  --eyebrow-color: #c9a0e0;
+  --moon-glow: rgba(232, 184, 109, 0.4);
+  --ship-hull: #2a1848;
+  --ship-super: #341f5a;
+  --ship-bridge: #3d2870;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--foam);
+  overflow-x: hidden;
+  transition: background var(--transition-speed) ease;
+}
+
+body {
+  background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
+  min-height: 100vh;
+}
+
+/* ── STARS ── */
+.stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle var(--d) ease-in-out infinite alternate;
+  opacity: 0;
+}
+@keyframes twinkle {
+  from { opacity: 0.1; transform: scale(0.8); }
+  to   { opacity: 0.9; transform: scale(1.2); }
+}
+
+/* ── SETUP SCREEN ── */
+#setup-screen {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  background: linear-gradient(180deg, #071828 0%, #0a2030 100%);
+}
+
+.boarding-card {
+  width: min(480px, 100%);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 36px 32px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  animation: cardIn 0.6s cubic-bezier(0.34,1.3,0.64,1) both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card-logo {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 28px;
+}
+.card-logo img { width: 40px; height: 40px; object-fit: contain; }
+.card-logo span {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0.02em;
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.card-sub {
+  font-size: 0.78rem;
+  color: rgba(240,248,255,0.45);
+  letter-spacing: 0.06em;
+  margin-bottom: 28px;
+}
+
+/* ── SHIP NAME INPUT ── */
+.ship-row {
+  display: flex; align-items: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 0 14px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.ship-row:focus-within { border-color: rgba(126,232,232,0.5); }
+.ship-prefix {
+  font-size: 0.82rem;
+  color: rgba(240,248,255,0.35);
+  white-space: nowrap;
+  padding: 14px 0;
+  padding-right: 8px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  margin-right: 10px;
+  font-style: italic;
+}
+.ship-row input {
+  flex: 1;
+  background: none; border: none; outline: none;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 14px 0;
+}
+.ship-row input::placeholder { color: rgba(255,255,255,0.2); font-weight: 400; }
+.ship-suffix {
+  font-size: 0.82rem;
+  color: rgba(245,200,66,0.6);
+  white-space: nowrap;
+  padding: 14px 0;
+  padding-left: 8px;
+  border-left: 1px solid rgba(255,255,255,0.08);
+  margin-left: 10px;
+  font-style: italic;
+}
+
+/* ── DATE INPUT ── */
+.field-label {
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(240,248,255,0.35);
+  margin-bottom: 6px;
+  margin-top: 16px;
+  display: block;
+}
+.date-input {
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 13px 14px;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.date-input:focus { border-color: rgba(126,232,232,0.5); }
+.date-input::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
+
+/* ── THEME SELECTOR ── */
+.theme-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 6px;
+}
+.theme-opt {
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, transform 0.15s;
+  position: relative;
+}
+.theme-opt:hover { transform: translateY(-2px); }
+.theme-opt.selected { border-color: #F5C842; }
+.theme-opt input { position: absolute; opacity: 0; width: 0; height: 0; }
+.theme-swatch {
+  height: 52px;
+  display: flex; align-items: flex-end;
+  padding: 6px 8px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.9);
+}
+.theme-opt.selected .theme-swatch::after {
+  content: '✓';
+  position: absolute; top: 6px; right: 8px;
+  color: #F5C842; font-size: 11px;
+}
+.swatch-alaska  { background: linear-gradient(135deg, #071828, #7ee8e8 200%); }
+.swatch-caribbean { background: linear-gradient(135deg, #021830, #00d4aa 200%); }
+.swatch-europe  { background: linear-gradient(135deg, #1a0e2e, #c9a0e0 200%); }
+
+/* ── SUBMIT ── */
+.btn-board {
+  width: 100%;
+  margin-top: 24px;
+  padding: 15px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #1a6b6b, #1a5080);
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.btn-board:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-board:active { transform: translateY(0); }
+
+.error-msg {
+  color: #ff8a80;
+  font-size: 0.72rem;
+  margin-top: 8px;
+  text-align: center;
+  min-height: 18px;
+}
+
+/* ── MAIN SCENE ── */
+#main-screen { display: none; }
+
+.scene {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px 220px;
+  z-index: 1;
+}
+
+/* ── MOON / CELESTIAL ── */
+.moon {
+  position: fixed;
+  top: 48px; right: 6vw;
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #fffbe6, #f5c842);
+  box-shadow: 0 0 40px var(--moon-glow, rgba(245,200,66,0.35)), 0 0 80px var(--moon-glow, rgba(245,200,66,0.1));
+  z-index: 1;
+  animation: moonGlow 6s ease-in-out infinite alternate;
+  transition: box-shadow var(--transition-speed);
+}
+@keyframes moonGlow {
+  from { opacity: 0.85; }
+  to   { opacity: 1; }
+}
+
+/* Alaska aurora */
+.aurora {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 45vh;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(60, 220, 180, 0.06) 30%,
+    rgba(60, 180, 220, 0.1) 50%,
+    rgba(120, 60, 220, 0.06) 70%,
+    transparent 100%);
+  animation: auroraWave 8s ease-in-out infinite alternate;
+}
+.theme-alaska .aurora { display: block; }
+@keyframes auroraWave {
+  from { opacity: 0.4; transform: scaleX(1); }
+  to   { opacity: 1; transform: scaleX(1.05); }
+}
+
+/* Caribbean sun glow */
+.sun-glow {
+  display: none;
+  position: fixed;
+  top: -80px; right: 4vw;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,180,60,0.18) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: sunPulse 5s ease-in-out infinite alternate;
+}
+.theme-caribbean .sun-glow { display: block; }
+@keyframes sunPulse {
+  from { transform: scale(1); opacity: 0.6; }
+  to   { transform: scale(1.2); opacity: 1; }
+}
+
+/* ── HEADER ── */
+.header-area { text-align: center; margin-bottom: 44px; }
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+  font-weight: 600;
+  transition: color var(--transition-speed);
+}
+
+.ship-name-display {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(240,248,255,0.5);
+  margin-bottom: 2px;
+}
+.ship-name-display strong {
+  font-style: normal;
+  font-weight: 900;
+  color: var(--gold);
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+h1 em { font-style: italic; color: var(--accent); transition: color var(--transition-speed); }
+
+.subhead {
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: var(--text-sub);
+  transition: color var(--transition-speed);
+}
+
+/* ── PORTHOLES ── */
+.countdown {
+  display: flex;
+  gap: clamp(10px, 2.5vw, 28px);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 44px;
+}
+.porthole-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.porthole {
+  position: relative;
+  width: clamp(74px, 17vw, 132px);
+  height: clamp(74px, 17vw, 132px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--porthole-bg1), var(--porthole-bg2));
+  border: 3px solid var(--porthole-border);
+  box-shadow:
+    0 0 0 6px var(--porthole-ring1),
+    0 0 0 9px var(--porthole-ring2),
+    0 0 30px rgba(0,0,0,0.3),
+    inset 0 2px 8px rgba(255,255,255,0.05),
+    inset 0 -2px 8px rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+.porthole::before {
+  content: '';
+  position: absolute; inset: -14px;
+  border-radius: 50%;
+  border: 3px dashed rgba(255,255,255,0.06);
+}
+.porthole-number {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 5.5vw, 3.5rem);
+  font-weight: 900;
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(245,200,66,0.5);
+  line-height: 1;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+  position: relative; z-index: 1;
+}
+.porthole-number.flip { transform: scale(1.25); opacity: 0.5; }
+.porthole-label {
+  font-size: clamp(0.58rem, 1.3vw, 0.7rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: rgba(240,248,255,0.35);
+}
+.sep {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 4vw, 2.8rem);
+  color: var(--gold-dim);
+  opacity: 0.35;
+  line-height: 1;
+  padding-top: clamp(24px, 4.5vw, 42px);
+}
+
+/* ── BADGE + PROGRESS ── */
+.bottom-area { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--badge-border);
+  border-radius: 100px;
+  padding: 9px 22px;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: rgba(240,248,255,0.6);
+  transition: border-color var(--transition-speed);
+}
+.date-badge strong { color: var(--accent); font-weight: 600; transition: color var(--transition-speed); }
+.progress-wrap { width: min(400px, 88vw); }
+.progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(240,248,255,0.25);
+  margin-bottom: 7px;
+}
+.progress-track {
+  height: 3px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--progress-start), var(--progress-end));
+  border-radius: 2px;
+  transition: width 1s ease, background var(--transition-speed);
+  box-shadow: 0 0 8px rgba(245,200,66,0.3);
+}
+.progress-pct { text-align: center; font-size: 0.65rem; color: rgba(240,248,255,0.2); margin-top: 5px; letter-spacing: 0.08em; }
+
+/* ── CHANGE LINK ── */
+.change-link {
+  font-size: 0.68rem;
+  color: rgba(240,248,255,0.25);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid rgba(240,248,255,0.1);
+  cursor: pointer;
+  margin-top: 6px;
+  transition: color 0.2s;
+}
+.change-link:hover { color: rgba(240,248,255,0.5); }
+
+/* ── OCEAN ── */
+.ocean-scene {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 200px;
+  pointer-events: none;
+  z-index: 2;
+}
+.wave-layer { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; }
+.wave-layer svg { width: 100%; height: 100%; }
+.wave-back  { animation: waveScroll 14s linear infinite; opacity: 0.45; }
+.wave-mid   { animation: waveScroll 10s linear infinite reverse; opacity: 0.65; }
+.wave-front { animation: waveScroll 7s linear infinite; opacity: 1; }
+@keyframes waveScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Silhouettes */
+.silhouette {
+  position: absolute;
+  bottom: 90px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.sil-alaska   { right: 0; bottom: 80px; }
+.sil-europe   { left: 0; bottom: 80px; }
+.sil-caribbean{ right: 20px; bottom: 76px; }
+.theme-alaska   .sil-alaska    { opacity: 0.15; }
+.theme-europe   .sil-europe    { opacity: 0.12; }
+.theme-caribbean .sil-caribbean { opacity: 0.2; }
+
+/* Ship */
+.ship-wrap {
+  position: absolute;
+  bottom: 95px; left: 50%;
+  transform: translateX(-50%);
+  animation: shipBob 4s ease-in-out infinite;
+  z-index: 3;
+}
+@keyframes shipBob {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(-0.5deg); }
+  50%       { transform: translateX(-50%) translateY(-8px) rotate(0.5deg); }
+}
+.ship-svg { width: clamp(150px, 24vw, 270px); filter: drop-shadow(0 6px 20px rgba(0,0,0,0.5)); }
+
+.smoke {
+  position: absolute;
+  bottom: 100%;
+  animation: smokeRise var(--sd) ease-out infinite;
+  opacity: 0;
+  border-radius: 50%;
+  background: rgba(200,220,240,0.18);
+}
+@keyframes smokeRise {
+  0%   { opacity: 0; transform: translateY(0) scale(0.4); }
+  20%  { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-50px) scale(1.8); }
+}
+
+/* ── GYRO BUTTON ── */
+#motion-btn {
+  position: fixed;
+  bottom: 210px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  background: rgba(7,24,40,0.85);
+  border: 1px solid rgba(126,232,232,0.4);
+  color: #7ee8e8;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 9px 18px;
+  border-radius: 100px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  animation: btnPulse 2s ease-in-out infinite alternate;
+}
+@keyframes btnPulse {
+  from { box-shadow: 0 0 12px rgba(126,232,232,0.15); }
+  to   { box-shadow: 0 0 28px rgba(126,232,232,0.35); }
+}
+.gyro-active .ship-wrap { animation: none !important; }
+
+/* ── ARRIVED ── */
+.arrived {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  font-weight: 900;
+  color: var(--gold);
+  text-align: center;
+  animation: pulse 2s ease-in-out infinite alternate;
+}
+@keyframes pulse { from { opacity: 0.8; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body class="theme-alaska">
+
+<div class="stars" id="stars"></div>
+
+<!-- Setup Screen -->
+<div id="setup-screen">
+  <div class="boarding-card">
+    <div class="card-logo">
+      <img src="https://res.cloudinary.com/cotw/image/upload/v1785339426/anklo_vn5nyx.png" alt="Logo">
+      <span>Cruise Countdown</span>
+    </div>
+    <h2 class="card-title">Plan your countdown</h2>
+    <p class="card-sub">SAVE THE LINK TO BOOKMARK YOUR CRUISE</p>
+
+    <label class="field-label">Ship name</label>
+    <div class="ship-row">
+      <span class="ship-prefix">The</span>
+      <input type="text" id="ship-input" placeholder="Wonder" autocomplete="off" maxlength="40">
+      <span class="ship-suffix">of the Seas</span>
+    </div>
+
+    <label class="field-label" for="date-input">Embarkation date &amp; time</label>
+    <input type="datetime-local" class="date-input" id="date-input">
+
+    <label class="field-label" style="margin-top:20px;">Destination theme</label>
+    <div class="theme-grid">
+      <label class="theme-opt selected" data-theme="alaska">
+        <input type="radio" name="theme" value="alaska" checked>
+        <div class="theme-swatch swatch-alaska">🏔 Alaska</div>
+      </label>
+      <label class="theme-opt" data-theme="caribbean">
+        <input type="radio" name="theme" value="caribbean">
+        <div class="theme-swatch swatch-caribbean">🌴 Caribbean</div>
+      </label>
+      <label class="theme-opt" data-theme="europe">
+        <input type="radio" name="theme" value="europe">
+        <div class="theme-swatch swatch-europe">🏰 Europe</div>
+      </label>
+    </div>
+
+    <div class="error-msg" id="error-msg"></div>
+    <button class="btn-board" id="btn-board">⚓ Set Sail →</button>
+  </div>
+</div>
+
+<!-- Main Countdown Screen -->
+<div id="main-screen">
+  <div class="aurora"></div>
+  <div class="sun-glow"></div>
+  <div class="moon"></div>
+
+  <div class="scene">
+    <div class="header-area">
+      <p class="eyebrow" id="eyebrow-text">⚓ Bon Voyage Countdown</p>
+      <p class="ship-name-display">The <strong id="display-ship">Wonder</strong> of the Seas</p>
+      <h1>Days Until We<br><em id="theme-headline">Explore</em></h1>
+      <p class="subhead" id="display-date-sub">Embarkation · Loading...</p>
+    </div>
+
+    <div id="countdown-wrap">
+      <div class="countdown" id="countdown">
+        <div class="porthole-wrap">
+          <div class="porthole"><span class="porthole-number" id="days">--</span></div>
+          <span class="porthole-label">Days</span>
+        </div>
+        <div class="sep">:</div>
+        <div class="porthole-wrap">
+          <div class="porthole"><span class="porthole-number" id="hours">--</span></div>
+          <span class="porthole-label">Hours</span>
+        </div>
+        <div class="sep">:</div>
+        <div class="porthole-wrap">
+          <div class="porthole"><span class="porthole-number" id="minutes">--</span></div>
+          <span class="porthole-label">Minutes</span>
+        </div>
+        <div class="sep">:</div>
+        <div class="porthole-wrap">
+          <div class="porthole"><span class="porthole-number" id="seconds">--</span></div>
+          <span class="porthole-label">Seconds</span>
+        </div>
+      </div>
+
+      <div class="bottom-area">
+        <div class="date-badge">
+          ⚓ Departing <strong id="badge-date">—</strong>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>Journey begins</span><span>Bon Voyage!</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+          <div class="progress-pct" id="progress-pct"></div>
+        </div>
+        <span class="change-link" id="change-link">✎ Change cruise details</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ocean -->
+  <div class="ocean-scene">
+    <div class="wave-layer wave-back">
+      <svg viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="wb1" d="M0,80 C180,40 360,120 540,80 C720,40 900,120 1080,80 C1260,40 1350,100 1440,80 L1440,200 L0,200 Z"/>
+        <path id="wb2" d="M1440,80 C1260,40 1080,120 900,80 C720,40 540,120 360,80 C180,40 90,100 0,80 L0,200 L1440,200 Z"/>
+      </svg>
+    </div>
+    <div class="wave-layer wave-mid">
+      <svg viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="wm1" d="M0,100 C200,60 400,140 600,100 C800,60 1000,140 1200,100 C1320,76 1380,116 1440,100 L1440,200 L0,200 Z"/>
+        <path id="wm2" d="M1440,100 C1240,60 1040,140 840,100 C640,60 440,140 240,100 C120,76 60,116 0,100 L0,200 L1440,200 Z"/>
+      </svg>
+    </div>
+    <div class="wave-layer wave-front">
+      <svg viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="wf1" d="M0,120 C180,80 360,155 540,120 C720,85 900,155 1080,120 C1260,85 1350,135 1440,120 L1440,200 L0,200 Z"/>
+        <path id="wf2" d="M1440,120 C1260,80 1080,155 900,120 C720,85 540,155 360,120 C180,85 90,135 0,120 L0,200 L1440,200 Z"/>
+      </svg>
+    </div>
+
+    <!-- Alaska: glacier silhouette -->
+    <svg class="silhouette sil-alaska" width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,120 L0,60 L40,20 L70,45 L110,5 L145,35 L180,15 L210,40 L250,0 L280,30 L320,10 L320,120 Z" fill="white"/>
+    </svg>
+    <!-- Europe: castle silhouette -->
+    <svg class="silhouette sil-europe" width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,130 L0,80 L20,80 L20,60 L30,60 L30,50 L40,50 L40,60 L50,60 L50,80 L70,80 L70,40 L80,40 L80,25 L90,25 L90,10 L100,10 L100,25 L110,25 L110,40 L130,40 L130,60 L140,60 L140,45 L150,45 L150,60 L160,60 L160,80 L180,80 L180,55 L190,55 L190,40 L200,40 L200,55 L210,55 L210,80 L240,80 L240,65 L250,65 L250,55 L260,55 L260,65 L270,65 L270,80 L280,80 L280,130 Z" fill="white"/>
+    </svg>
+    <!-- Caribbean: palm silhouette -->
+    <svg class="silhouette sil-caribbean" width="100" height="150" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50,150 L44,80 Q20,40 0,30 Q25,55 42,75 L38,30 Q30,5 10,0 Q35,15 40,50 L38,10 Q45,0 50,0 Q55,0 62,10 L60,50 Q65,15 90,0 Q70,5 62,30 L58,75 Q75,55 100,30 Q80,40 56,80 L50,150 Z" fill="#00d4aa"/>
+      <rect x="47" y="100" width="6" height="50" fill="#00d4aa"/>
+    </svg>
+
+    <!-- Ship -->
+    <div class="ship-wrap">
+      <div class="smoke" style="width:14px;height:14px;left:60px;--sd:3s;animation-delay:0s;"></div>
+      <div class="smoke" style="width:10px;height:10px;left:67px;--sd:3s;animation-delay:1s;"></div>
+      <div class="smoke" style="width:16px;height:16px;left:54px;--sd:3s;animation-delay:2s;"></div>
+      <svg class="ship-svg" viewBox="0 0 280 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20,75 L260,75 L245,100 L35,100 Z" fill="var(--ship-hull,#1a3d6b)" stroke="#2a5c9e" stroke-width="1.5"/>
+        <path d="M30,78 L250,78" stroke="#2e6caa" stroke-width="1" opacity="0.5"/>
+        <path d="M35,95 L245,95" stroke="#F5C842" stroke-width="2.5" opacity="0.7"/>
+        <rect x="70" y="45" width="150" height="30" rx="3" fill="var(--ship-super,#1e4a80)" stroke="#2a5c9e" stroke-width="1"/>
+        <rect x="80" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity="0.8"/>
+        <rect x="108" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity="0.8"/>
+        <rect x="136" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity="0.8"/>
+        <rect x="164" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity="0.8"/>
+        <rect x="82" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.7"/>
+        <rect x="110" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.7"/>
+        <rect x="138" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.7"/>
+        <rect x="166" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.7"/>
+        <rect x="100" y="28" width="80" height="20" rx="3" fill="var(--ship-bridge,#245a9e)" stroke="#3572be" stroke-width="1"/>
+        <rect x="110" y="32" width="14" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.5"/>
+        <rect x="128" y="32" width="14" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.5"/>
+        <rect x="146" y="32" width="14" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.5"/>
+        <rect x="164" y="32" width="10" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.5"/>
+        <rect x="120" y="10" width="20" height="22" rx="4" fill="var(--ship-hull,#1a3d6b)" stroke="#2a5c9e" stroke-width="1.5"/>
+        <rect x="120" y="18" width="20" height="6" fill="#F5C842" opacity="0.8"/>
+        <path d="M260,75 L270,88 L245,100 Z" fill="#15345a"/>
+        <line x1="70" y1="45" x2="70" y2="75" stroke="#2a5c9e" stroke-width="1" opacity="0.5"/>
+        <line x1="220" y1="45" x2="220" y2="75" stroke="#2a5c9e" stroke-width="1" opacity="0.5"/>
+        <line x1="70" y1="45" x2="220" y2="45" stroke="#3572be" stroke-width="1" opacity="0.4"/>
+        <line x1="140" y1="2" x2="140" y2="12" stroke="#F5C842" stroke-width="1.5"/>
+        <path d="M140,2 L156,5 L140,9 Z" fill="#F5C842"/>
+        <text x="140" y="91" text-anchor="middle" font-size="11" fill="#F5C842" opacity="0.4" font-family="serif">⚓</text>
+      </svg>
+    </div>
+  </div>
+
+  <button id="motion-btn">🌊 Enable Motion</button>
+</div>
+
+<script>
+// ── STARS ──
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 130; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 2.5 + 0.5;
+  s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*78}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*6).toFixed(1)}s;`;
+  starsEl.appendChild(s);
+}
+
+// ── URL PARAMS ──
+function getParams() {
+  const p = new URLSearchParams(location.search);
+  return { depart: p.get('depart'), ship: p.get('ship'), theme: p.get('theme') };
+}
+
+function setParams(depart, ship, theme) {
+  const url = new URL(location.href);
+  url.searchParams.set('depart', depart);
+  url.searchParams.set('ship', ship);
+  url.searchParams.set('theme', theme);
+  history.replaceState({}, '', url.toString());
+}
+
+// Parse mmddyyhhmm → Date
+function parseDepart(str) {
+  if (!str || str.length < 10) return null;
+  const mo = str.slice(0,2), dd = str.slice(2,4), yy = str.slice(4,6);
+  const hh = str.slice(6,8) || '10', mm = str.slice(8,10) || '00';
+  const year = 2000 + parseInt(yy);
+  return new Date(year, parseInt(mo)-1, parseInt(dd), parseInt(hh), parseInt(mm));
+}
+
+function encodeDepart(dtLocal) {
+  // dtLocal is value from datetime-local input: "2026-10-10T10:00"
+  const [datePart, timePart] = dtLocal.split('T');
+  const [y, mo, dd] = datePart.split('-');
+  const [hh, mm] = (timePart || '10:00').split(':');
+  const yy = y.slice(2);
+  return `${mo}${dd}${yy}${hh}${mm}`;
+}
+
+// ── THEME CONFIG ──
+const THEMES = {
+  alaska: {
+    eyebrow: '🏔 Alaska Expedition',
+    headline: 'Sail Alaska',
+    waterColors: ['#0a2030', '#0f3050', '#071828'],
+    emoji: '🏔',
+  },
+  caribbean: {
+    eyebrow: '🌴 Caribbean Escape',
+    headline: 'Cruise Paradise',
+    waterColors: ['#043a5a', '#0a5070', '#021830'],
+    emoji: '🌴',
+  },
+  europe: {
+    eyebrow: '🏰 European Voyage',
+    headline: 'Discover Europe',
+    waterColors: ['#1e1035', '#2a1848', '#1a0e2e'],
+    emoji: '🏰',
+  },
+};
+
+// ── APPLY THEME ──
+function applyTheme(theme) {
+  const body = document.body;
+  body.classList.remove('theme-alaska','theme-caribbean','theme-europe');
+  body.classList.add('theme-' + theme);
+  const cfg = THEMES[theme] || THEMES.alaska;
+  document.getElementById('eyebrow-text').textContent = cfg.eyebrow;
+  document.getElementById('theme-headline').textContent = cfg.headline.split(' ').slice(1).join(' ');
+  const h1Em = document.querySelector('h1 em');
+  if (h1Em) h1Em.textContent = cfg.headline.split(' ').slice(1).join(' ');
+
+  // Update wave colors
+  const [c1, c2, c3] = cfg.waterColors;
+  document.getElementById('wb1').setAttribute('fill', c1);
+  document.getElementById('wb2').setAttribute('fill', c1);
+  document.getElementById('wm1').setAttribute('fill', c2);
+  document.getElementById('wm2').setAttribute('fill', c2);
+  document.getElementById('wf1').setAttribute('fill', c3);
+  document.getElementById('wf2').setAttribute('fill', c3);
+}
+
+// ── COUNTDOWN LOGIC ──
+let countdownInterval = null;
+let targetDate = null;
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function animateNumber(el, val) {
+  if (el.textContent === val) return;
+  el.classList.add('flip');
+  setTimeout(() => { el.textContent = val; el.classList.remove('flip'); }, 150);
+}
+
+function formatDateDisplay(d) {
+  return d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' })
+    + ' at ' + d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+}
+
+function tick() {
+  if (!targetDate) return;
+  const now = new Date();
+  const diff = targetDate - now;
+  if (diff <= 0) {
+    document.getElementById('countdown-wrap').innerHTML = '<p class="arrived">🛳️ Bon Voyage! Set sail!</p>';
+    clearInterval(countdownInterval);
+    return;
+  }
+  const totalSec = Math.floor(diff / 1000);
+  animateNumber(document.getElementById('days'),    pad(Math.floor(totalSec / 86400)));
+  animateNumber(document.getElementById('hours'),   pad(Math.floor((totalSec % 86400) / 3600)));
+  animateNumber(document.getElementById('minutes'), pad(Math.floor((totalSec % 3600) / 60)));
+  animateNumber(document.getElementById('seconds'), pad(totalSec % 60));
+
+  const rangeMs = 365 * 24 * 60 * 60 * 1000;
+  const startRef = new Date(targetDate - rangeMs);
+  const elapsed = Math.max(0, now - startRef);
+  const pct = Math.min(100, (elapsed / (targetDate - startRef)) * 100);
+  document.getElementById('progress-fill').style.width = pct.toFixed(2) + '%';
+  document.getElementById('progress-pct').textContent = pct.toFixed(1) + '% of the way there';
+}
+
+function launchCountdown(departStr, shipName, theme) {
+  targetDate = parseDepart(departStr);
+  if (!targetDate || isNaN(targetDate)) return false;
+
+  applyTheme(theme);
+
+  document.getElementById('display-ship').textContent = shipName || 'Wonder';
+  document.getElementById('display-date-sub').textContent =
+    'Embarkation · ' + targetDate.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' }) +
+    ' · ' + targetDate.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+  document.getElementById('badge-date').textContent =
+    targetDate.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' }) +
+    ' at ' + targetDate.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('main-screen').style.display = 'block';
+
+  if (countdownInterval) clearInterval(countdownInterval);
+  tick();
+  countdownInterval = setInterval(tick, 1000);
+
+  setTimeout(initMotion, 800);
+  return true;
+}
+
+// ── SETUP FORM ──
+// Theme selector
+document.querySelectorAll('.theme-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    opt.querySelector('input').checked = true;
+  });
+});
+
+document.getElementById('btn-board').addEventListener('click', () => {
+  const ship = document.getElementById('ship-input').value.trim();
+  const dateVal = document.getElementById('date-input').value;
+  const theme = document.querySelector('input[name="theme"]:checked')?.value || 'alaska';
+  const errEl = document.getElementById('error-msg');
+
+  if (!ship) { errEl.textContent = 'Please enter your ship name.'; return; }
+  if (!dateVal) { errEl.textContent = 'Please pick your embarkation date and time.'; return; }
+  errEl.textContent = '';
+
+  const departCode = encodeDepart(dateVal);
+  setParams(departCode, ship, theme);
+  launchCountdown(departCode, ship, theme);
+});
+
+// ── CHANGE LINK ──
+document.getElementById('change-link').addEventListener('click', () => {
+  document.getElementById('main-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'flex';
+  // Pre-fill form with current values
+  const { ship, theme } = getParams();
+  if (ship) document.getElementById('ship-input').value = ship;
+  if (theme) {
+    document.querySelectorAll('.theme-opt').forEach(o => {
+      const match = o.dataset.theme === theme;
+      o.classList.toggle('selected', match);
+      o.querySelector('input').checked = match;
+    });
+  }
+});
+
+// ── AUTO-LOAD FROM URL ──
+(function() {
+  const { depart, ship, theme } = getParams();
+  if (depart && ship) {
+    launchCountdown(depart, ship, theme || 'alaska');
+  }
+  // Pre-fill date to a sensible default (tomorrow at 10am)
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(10, 0, 0, 0);
+  const pad2 = n => String(n).padStart(2,'0');
+  document.getElementById('date-input').value =
+    `${tomorrow.getFullYear()}-${pad2(tomorrow.getMonth()+1)}-${pad2(tomorrow.getDate())}T10:00`;
+})();
+
+// ── GYROSCOPE ──
+const shipWrap  = document.querySelector('.ship-wrap');
+const waveBack  = document.querySelector('.wave-back');
+const waveMid   = document.querySelector('.wave-mid');
+const waveFront = document.querySelector('.wave-front');
+const motionBtn = document.getElementById('motion-btn');
+let smoothGamma = 0, smoothBeta = 0, gyroActive = false;
+const SMOOTH = 0.08;
+
+function onOrientation(e) {
+  if (!gyroActive) return;
+  const g = Math.max(-40, Math.min(40, e.gamma ?? 0));
+  const b = Math.max(-30, Math.min(30, (e.beta ?? 45) - 45));
+  smoothGamma += (g - smoothGamma) * SMOOTH;
+  smoothBeta  += (b - smoothBeta)  * SMOOTH;
+  shipWrap.style.transform = `translateX(calc(-50% + ${smoothGamma*1.5}px)) translateY(${smoothBeta*0.6}px) rotate(${smoothGamma*0.35}deg)`;
+  waveBack.style.marginLeft  = `${smoothGamma * 0.8}px`;
+  waveMid.style.marginLeft   = `${smoothGamma * 1.4}px`;
+  waveFront.style.marginLeft = `${smoothGamma * 2.0}px`;
+}
+
+function startGyro() {
+  gyroActive = true;
+  document.body.classList.add('gyro-active');
+  motionBtn.style.display = 'none';
+  window.addEventListener('deviceorientation', onOrientation, true);
+}
+
+function initMotion() {
+  if (typeof DeviceOrientationEvent !== 'undefined' &&
+      typeof DeviceOrientationEvent.requestPermission === 'function') {
+    motionBtn.style.display = 'flex';
+    motionBtn.addEventListener('click', () => {
+      DeviceOrientationEvent.requestPermission()
+        .then(s => { if (s === 'granted') startGyro(); })
+        .catch(console.warn);
+    }, { once: true });
+  } else if (window.DeviceOrientationEvent) {
+    let n = 0;
+    const test = (e) => {
+      if (++n > 3 && e.gamma !== null) { window.removeEventListener('deviceorientation', test, true); startGyro(); }
+      else if (n > 10) window.removeEventListener('deviceorientation', test, true);
+    };
+    window.addEventListener('deviceorientation', test, true);
+  }
+}
+</script>
+</body>
+</html>
