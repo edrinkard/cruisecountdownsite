@@ -10,651 +10,388 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── THEME TOKENS ── */
+/* ════════════════════════════════════════
+   DAY / NIGHT  ×  DESTINATION TOKEN SYSTEM
+   ════════════════════════════════════════ */
 :root {
-  /* shared */
   --gold: #F5C842;
   --gold-dim: #c9a330;
-  --foam: #F0F8FF;
-  --white: #ffffff;
-  --transition-speed: 0.6s;
+  --transition-speed: 0.5s;
 }
+
+/* ── NIGHT base (dark sky) ── */
+body.night {
+  --sky1: #071828; --sky2: #0d2a40;
+  --surface-card: rgba(255,255,255,0.04);
+  --surface-border: rgba(255,255,255,0.10);
+  --text-primary: #F0F8FF;
+  --text-muted: rgba(240,248,255,0.40);
+  --text-sub: rgba(240,248,255,0.55);
+  --setup-bg1: #071828; --setup-bg2: #0a2030;
+  --porthole-inner1: #0c2535; --porthole-inner2: #071828;
+  --porthole-border-color: #1e4a6a;
+  --porthole-ring1: #163650; --porthole-ring2: #0c2535;
+  --number-color: #F5C842;
+  --celestial-display: block;
+  --star-opacity: 1;
+  --daybar-bg: rgba(255,255,255,0.07);
+  --toggle-track: #1e3a55;
+  --toggle-thumb: #7ee8e8;
+}
+
+/* ── DAY base (bright sky) ── */
+body.day {
+  --sky1: #2196e8; --sky2: #64c8f5;
+  --surface-card: rgba(255,255,255,0.18);
+  --surface-border: rgba(255,255,255,0.35);
+  --text-primary: #fff;
+  --text-muted: rgba(255,255,255,0.60);
+  --text-sub: rgba(255,255,255,0.75);
+  --setup-bg1: #1a7bd4; --setup-bg2: #0d5fad;
+  --porthole-inner1: #1565c0; --porthole-inner2: #0d47a1;
+  --porthole-border-color: #42a5f5;
+  --porthole-ring1: #1976d2; --porthole-ring2: #1565c0;
+  --number-color: #fff;
+  --celestial-display: none;
+  --star-opacity: 0;
+  --daybar-bg: rgba(255,255,255,0.15);
+  --toggle-track: #1976d2;
+  --toggle-thumb: #FFD54F;
+}
+
+/* ════ DESTINATION ACCENT OVERRIDES ════ */
 
 /* ALASKA */
-.theme-alaska {
-  --bg1: #071828;
-  --bg2: #0d2a40;
-  --accent: #7ee8e8;
-  --accent2: #a8edea;
-  --porthole-bg1: #0c2535;
-  --porthole-bg2: #071828;
-  --porthole-border: #1e4a6a;
-  --porthole-ring1: #163650;
-  --porthole-ring2: #0c2535;
-  --water1: #0a2030;
-  --water2: #0f2e45;
-  --water3: #071828;
-  --wave-opacity: 1;
-  --text-sub: rgba(168, 237, 234, 0.55);
-  --badge-border: rgba(126, 232, 232, 0.25);
-  --progress-start: #7ee8e8;
-  --progress-end: #F5C842;
-  --eyebrow-color: #7ee8e8;
-  --moon-glow: rgba(168, 237, 234, 0.35);
-  --ship-hull: #1a3d5a;
-  --ship-super: #1e4a70;
-  --ship-bridge: #245a8e;
-}
+body.night.dest-alaska  { --sky1:#071828;--sky2:#0d2a40;--accent:#7ee8e8;--accent2:#a8edea;--water1:#0a2030;--water2:#0f2e45;--water3:#071828;--badge-border:rgba(126,232,232,.25);--prog1:#7ee8e8;--prog2:#F5C842; }
+body.day.dest-alaska    { --sky1:#b3e5fc;--sky2:#81d4fa;--accent:#006064;--accent2:#00838f;--water1:#4fc3f7;--water2:#29b6f6;--water3:#0288d1;--badge-border:rgba(0,96,100,.3);--prog1:#006064;--prog2:#F5C842; }
 
 /* CARIBBEAN */
-.theme-caribbean {
-  --bg1: #021830;
-  --bg2: #052840;
-  --accent: #00d4aa;
-  --accent2: #ff7c5c;
-  --porthole-bg1: #073050;
-  --porthole-bg2: #021830;
-  --porthole-border: #0e4a6a;
-  --porthole-ring1: #0a3858;
-  --porthole-ring2: #052840;
-  --water1: #043a5a;
-  --water2: #0a5070;
-  --water3: #021830;
-  --text-sub: rgba(0, 212, 170, 0.55);
-  --badge-border: rgba(0, 212, 170, 0.25);
-  --progress-start: #00d4aa;
-  --progress-end: #ff7c5c;
-  --eyebrow-color: #00d4aa;
-  --moon-glow: rgba(255, 200, 80, 0.45);
-  --ship-hull: #1a3d5a;
-  --ship-super: #1e4a70;
-  --ship-bridge: #245a8e;
-}
+body.night.dest-caribbean { --sky1:#021830;--sky2:#052840;--accent:#00d4aa;--accent2:#ff7c5c;--water1:#043a5a;--water2:#0a5070;--water3:#021830;--badge-border:rgba(0,212,170,.25);--prog1:#00d4aa;--prog2:#ff7c5c; }
+body.day.dest-caribbean   { --sky1:#00bcd4;--sky2:#26c6da;--accent:#004d40;--accent2:#ff5722;--water1:#00e5ff;--water2:#00b8d4;--water3:#0097a7;--badge-border:rgba(0,77,64,.3);--prog1:#00897b;--prog2:#ff5722; }
 
 /* EUROPE */
-.theme-europe {
-  --bg1: #1a0e2e;
-  --bg2: #251542;
-  --accent: #c9a0e0;
-  --accent2: #e8b86d;
-  --porthole-bg1: #2a1850;
-  --porthole-bg2: #1a0e2e;
-  --porthole-border: #3d2570;
-  --porthole-ring1: #2e1c5a;
-  --porthole-ring2: #1a0e2e;
-  --water1: #1e1035;
-  --water2: #2a1848;
-  --water3: #1a0e2e;
-  --text-sub: rgba(201, 160, 224, 0.55);
-  --badge-border: rgba(201, 160, 224, 0.25);
-  --progress-start: #c9a0e0;
-  --progress-end: #e8b86d;
-  --eyebrow-color: #c9a0e0;
-  --moon-glow: rgba(232, 184, 109, 0.4);
-  --ship-hull: #2a1848;
-  --ship-super: #341f5a;
-  --ship-bridge: #3d2870;
-}
+body.night.dest-europe  { --sky1:#1a0e2e;--sky2:#251542;--accent:#c9a0e0;--accent2:#e8b86d;--water1:#1e1035;--water2:#2a1848;--water3:#1a0e2e;--badge-border:rgba(201,160,224,.25);--prog1:#c9a0e0;--prog2:#e8b86d; }
+body.day.dest-europe    { --sky1:#7986cb;--sky2:#9fa8da;--accent:#283593;--accent2:#e65100;--water1:#5c6bc0;--water2:#7986cb;--water3:#3949ab;--badge-border:rgba(40,53,147,.3);--prog1:#3949ab;--prog2:#e65100; }
 
+/* ASIA */
+body.night.dest-asia    { --sky1:#1a0808;--sky2:#2d1010;--accent:#ff6b6b;--accent2:#ffd93d;--water1:#1a0f0f;--water2:#260f0f;--water3:#150808;--badge-border:rgba(255,107,107,.25);--prog1:#ff6b6b;--prog2:#ffd93d; }
+body.day.dest-asia      { --sky1:#ef9a9a;--sky2:#ffccbc;--accent:#b71c1c;--accent2:#e65100;--water1:#ef5350;--water2:#e53935;--water3:#c62828;--badge-border:rgba(183,28,28,.3);--prog1:#c62828;--prog2:#e65100; }
+
+/* AUSTRALIA */
+body.night.dest-australia { --sky1:#0d1f0a;--sky2:#152d10;--accent:#76c442;--accent2:#ffb300;--water1:#0a2008;--water2:#152e0f;--water3:#0a1808;--badge-border:rgba(118,196,66,.25);--prog1:#76c442;--prog2:#ffb300; }
+body.day.dest-australia   { --sky1:#f9a825;--sky2:#ffca28;--accent:#e65100;--accent2:#558b2f;--water1:#66bb6a;--water2:#4caf50;--water3:#388e3c;--badge-border:rgba(230,81,0,.3);--prog1:#e65100;--prog2:#558b2f; }
+
+/* BAHAMAS */
+body.night.dest-bahamas { --sky1:#012030;--sky2:#023050;--accent:#00e5ff;--accent2:#ffea00;--water1:#014060;--water2:#015080;--water3:#012030;--badge-border:rgba(0,229,255,.25);--prog1:#00e5ff;--prog2:#ffea00; }
+body.day.dest-bahamas   { --sky1:#00acc1;--sky2:#26c6da;--accent:#006064;--accent2:#f9a825;--water1:#00e5ff;--water2:#00bcd4;--water3:#0097a7;--badge-border:rgba(0,96,100,.3);--prog1:#00acc1;--prog2:#f9a825; }
+
+/* HAWAII */
+body.night.dest-hawaii  { --sky1:#1a0530;--sky2:#280a48;--accent:#ff4081;--accent2:#ffab40;--water1:#1a0830;--water2:#220a40;--water3:#150528;--badge-border:rgba(255,64,129,.25);--prog1:#ff4081;--prog2:#ffab40; }
+body.day.dest-hawaii    { --sky1:#f48fb1;--sky2:#f06292;--accent:#880e4f;--accent2:#e65100;--water1:#26c6da;--water2:#00bcd4;--water3:#0097a7;--badge-border:rgba(136,14,79,.3);--prog1:#880e4f;--prog2:#ff6f00; }
+
+/* MEXICO */
+body.night.dest-mexico  { --sky1:#1a0e00;--sky2:#2d1800;--accent:#ff9800;--accent2:#4caf50;--water1:#1a1000;--water2:#261800;--water3:#150c00;--badge-border:rgba(255,152,0,.25);--prog1:#ff9800;--prog2:#4caf50; }
+body.day.dest-mexico    { --sky1:#ffb74d;--sky2:#ffa726;--accent:#e65100;--accent2:#1b5e20;--water1:#26a69a;--water2:#009688;--water3:#00796b;--badge-border:rgba(230,81,0,.3);--prog1:#e65100;--prog2:#1b5e20; }
+
+/* CANADA */
+body.night.dest-canada  { --sky1:#0a0a1a;--sky2:#0f0f28;--accent:#ef5350;--accent2:#ffffff;--water1:#0d1525;--water2:#101d35;--water3:#080f1a;--badge-border:rgba(239,83,80,.25);--prog1:#ef5350;--prog2:#fff; }
+body.day.dest-canada    { --sky1:#b0bec5;--sky2:#90a4ae;--accent:#b71c1c;--accent2:#37474f;--water1:#546e7a;--water2:#607d8b;--water3:#455a64;--badge-border:rgba(183,28,28,.3);--prog1:#b71c1c;--prog2:#37474f; }
+
+/* ════════════ GLOBAL STYLES ════════════ */
 html, body {
-  height: 100%;
+  height: 100%; min-height: 100vh;
   font-family: 'Montserrat', sans-serif;
-  color: var(--foam);
+  color: var(--text-primary);
   overflow-x: hidden;
-  transition: background var(--transition-speed) ease;
+  transition: background var(--transition-speed) ease, color var(--transition-speed);
 }
-
 body {
-  background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
-  min-height: 100vh;
+  background: linear-gradient(180deg, var(--sky1) 0%, var(--sky2) 100%);
 }
 
-/* ── STARS ── */
-.stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-.star {
+/* ── Stars (night only) ── */
+.stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; transition: opacity 0.6s; opacity: var(--star-opacity); }
+.star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--d) ease-in-out infinite alternate; opacity: 0; }
+@keyframes twinkle { from{opacity:.1;transform:scale(.8)} to{opacity:.9;transform:scale(1.2)} }
+
+/* ── Sun (day only) ── */
+.sun {
+  position: fixed; top: 36px; right: 6vw;
+  width: 70px; height: 70px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #fff8e1, #FFD54F);
+  box-shadow: 0 0 0 12px rgba(255,213,79,.15), 0 0 60px rgba(255,213,79,.4), 0 0 120px rgba(255,193,7,.2);
+  z-index: 1; display: none;
+  animation: sunSpin 30s linear infinite, sunGlow 4s ease-in-out infinite alternate;
+}
+body.day .sun { display: block; }
+@keyframes sunSpin { to { transform: rotate(360deg); } }
+@keyframes sunGlow { from{box-shadow:0 0 0 12px rgba(255,213,79,.1),0 0 50px rgba(255,213,79,.3)} to{box-shadow:0 0 0 20px rgba(255,213,79,.2),0 0 80px rgba(255,213,79,.5)} }
+
+/* ── Moon (night only) ── */
+.moon {
+  position: fixed; top: 48px; right: 6vw;
+  width: 64px; height: 64px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #fffbe6, #f5c842);
+  box-shadow: 0 0 40px rgba(245,200,66,.35), 0 0 80px rgba(245,200,66,.1);
+  z-index: 1; display: var(--celestial-display, block);
+  animation: moonGlow 6s ease-in-out infinite alternate;
+}
+@keyframes moonGlow { from{opacity:.85} to{opacity:1} }
+
+/* ── Clouds (day only) ── */
+.clouds { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0; transition: opacity 0.6s; }
+body.day .clouds { opacity: 1; }
+.cloud {
   position: absolute;
-  background: white;
-  border-radius: 50%;
-  animation: twinkle var(--d) ease-in-out infinite alternate;
-  opacity: 0;
+  background: rgba(255,255,255,0.75);
+  border-radius: 50px;
+  animation: cloudDrift var(--cd) linear infinite;
 }
-@keyframes twinkle {
-  from { opacity: 0.1; transform: scale(0.8); }
-  to   { opacity: 0.9; transform: scale(1.2); }
+.cloud::before, .cloud::after {
+  content: ''; position: absolute; background: inherit; border-radius: 50%;
+}
+@keyframes cloudDrift { from{transform:translateX(-120%)} to{transform:translateX(110vw)} }
+
+/* ── Aurora (Alaska night only) ── */
+.aurora { display: none; position: fixed; top: 0; left: 0; right: 0; height: 45vh; pointer-events: none; z-index: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(60,220,180,.06) 30%, rgba(60,180,220,.1) 50%, rgba(120,60,220,.06) 70%, transparent 100%);
+  animation: auroraWave 8s ease-in-out infinite alternate; }
+body.night.dest-alaska .aurora { display: block; }
+@keyframes auroraWave { from{opacity:.4;transform:scaleX(1)} to{opacity:1;transform:scaleX(1.05)} }
+
+/* ── Day/Night Toggle ── */
+.dn-toggle {
+  position: fixed; top: 20px; left: 20px; z-index: 200;
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer; user-select: none;
+}
+.toggle-track {
+  width: 44px; height: 24px; border-radius: 12px;
+  background: var(--toggle-track);
+  position: relative; transition: background 0.4s;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.toggle-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--toggle-thumb);
+  transition: transform 0.3s cubic-bezier(.34,1.4,.64,1), background 0.4s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+body.day .toggle-thumb { transform: translateX(20px); }
+.toggle-label {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-primary);
+  opacity: 0.7; transition: opacity 0.3s;
+  min-width: 36px;
 }
 
-/* ── SETUP SCREEN ── */
+/* ════════════ SETUP SCREEN ════════════ */
 #setup-screen {
   position: fixed; inset: 0; z-index: 100;
   display: flex; align-items: center; justify-content: center;
-  padding: 20px;
-  background: linear-gradient(180deg, #071828 0%, #0a2030 100%);
+  padding: 16px;
+  background: linear-gradient(180deg, var(--setup-bg1,#071828) 0%, var(--setup-bg2,#0a2030) 100%);
+  overflow-y: auto;
+  transition: background 0.5s;
 }
-
 .boarding-card {
-  width: min(480px, 100%);
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.1);
+  width: min(500px, 100%);
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
   border-radius: 20px;
-  padding: 36px 32px;
+  padding: 30px 28px;
   backdrop-filter: blur(20px);
-  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-  animation: cardIn 0.6s cubic-bezier(0.34,1.3,0.64,1) both;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  animation: cardIn 0.6s cubic-bezier(.34,1.3,.64,1) both;
+  margin: auto;
 }
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(30px) scale(0.95); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
+@keyframes cardIn { from{opacity:0;transform:translateY(24px) scale(.96)} to{opacity:1;transform:none} }
 
-.card-logo {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 28px;
-}
-.card-logo img { width: 40px; height: 40px; object-fit: contain; }
-.card-logo span {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--white);
-  letter-spacing: 0.02em;
-}
+.card-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.card-logo img { width: 38px; height: 38px; object-fit: contain; }
+.card-logo span { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--text-primary); }
 
-.card-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: #fff;
-  margin-bottom: 6px;
-  line-height: 1.2;
-}
-.card-sub {
-  font-size: 0.78rem;
-  color: rgba(240,248,255,0.45);
-  letter-spacing: 0.06em;
-  margin-bottom: 28px;
-}
+.card-title { font-family:'Playfair Display',serif; font-size:1.55rem; font-weight:900; color:var(--text-primary); margin-bottom:4px; line-height:1.2; }
+.card-sub   { font-size:.75rem; color:var(--text-muted); letter-spacing:.06em; margin-bottom:24px; }
 
-/* ── SHIP NAME INPUT ── */
+/* Ship input */
 .ship-row {
-  display: flex; align-items: center;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 10px;
-  padding: 0 14px;
-  margin-bottom: 16px;
-  transition: border-color 0.2s;
+  display:flex; align-items:center;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+  border-radius:10px; padding:0 14px; margin-bottom:14px; transition:border-color .2s;
 }
-.ship-row:focus-within { border-color: rgba(126,232,232,0.5); }
-.ship-prefix {
-  font-size: 0.82rem;
-  color: rgba(240,248,255,0.35);
-  white-space: nowrap;
-  padding: 14px 0;
-  padding-right: 8px;
-  border-right: 1px solid rgba(255,255,255,0.08);
-  margin-right: 10px;
-  font-style: italic;
-}
-.ship-row input {
-  flex: 1;
-  background: none; border: none; outline: none;
-  color: #fff;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  padding: 14px 0;
-}
-.ship-row input::placeholder { color: rgba(255,255,255,0.2); font-weight: 400; }
-.ship-suffix {
-  font-size: 0.82rem;
-  color: rgba(245,200,66,0.6);
-  white-space: nowrap;
-  padding: 14px 0;
-  padding-left: 8px;
-  border-left: 1px solid rgba(255,255,255,0.08);
-  margin-left: 10px;
-  font-style: italic;
-}
+.ship-row:focus-within { border-color:rgba(126,232,232,0.5); }
+.ship-prefix { font-size:.8rem; color:var(--text-muted); white-space:nowrap; padding:13px 8px 13px 0; border-right:1px solid rgba(255,255,255,0.08); margin-right:10px; font-style:italic; }
+.ship-row input { flex:1; background:none; border:none; outline:none; color:var(--text-primary); font-family:'Montserrat',sans-serif; font-size:.88rem; font-weight:600; padding:13px 0; }
+.ship-row input::placeholder { color:rgba(255,255,255,0.22); font-weight:400; }
+.ship-suffix { font-size:.8rem; color:rgba(245,200,66,.65); white-space:nowrap; padding:13px 0 13px 8px; border-left:1px solid rgba(255,255,255,0.08); margin-left:10px; font-style:italic; }
 
-/* ── DATE INPUT ── */
-.field-label {
-  font-size: 0.66rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(240,248,255,0.35);
-  margin-bottom: 6px;
-  margin-top: 16px;
-  display: block;
-}
+/* Field label */
+.field-label { font-size:.63rem; letter-spacing:.18em; text-transform:uppercase; color:var(--text-muted); margin-bottom:5px; margin-top:14px; display:block; }
+
+/* Date input */
 .date-input {
-  width: 100%;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 10px;
-  padding: 13px 14px;
-  color: #fff;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  outline: none;
-  transition: border-color 0.2s;
-  appearance: none;
-  -webkit-appearance: none;
+  width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+  border-radius:10px; padding:12px 14px; color:var(--text-primary);
+  font-family:'Montserrat',sans-serif; font-size:.88rem; font-weight:600;
+  outline:none; transition:border-color .2s; appearance:none; -webkit-appearance:none;
 }
-.date-input:focus { border-color: rgba(126,232,232,0.5); }
-.date-input::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
+.date-input:focus { border-color:rgba(126,232,232,0.5); }
+.date-input::-webkit-calendar-picker-indicator { filter:invert(.6); cursor:pointer; }
 
-/* ── THEME SELECTOR ── */
-.theme-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+/* Destination grid — 3 columns, scrollable on mobile */
+.dest-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
   margin-top: 6px;
 }
-.theme-opt {
-  cursor: pointer;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 2px solid transparent;
-  transition: border-color 0.2s, transform 0.15s;
-  position: relative;
+.dest-opt {
+  cursor:pointer; border-radius:10px; overflow:hidden;
+  border:2px solid transparent; transition:border-color .2s, transform .15s;
+  position:relative;
 }
-.theme-opt:hover { transform: translateY(-2px); }
-.theme-opt.selected { border-color: #F5C842; }
-.theme-opt input { position: absolute; opacity: 0; width: 0; height: 0; }
-.theme-swatch {
-  height: 52px;
-  display: flex; align-items: flex-end;
-  padding: 6px 8px;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.9);
+.dest-opt:hover { transform:translateY(-2px); }
+.dest-opt.selected { border-color:#F5C842; }
+.dest-opt input { position:absolute; opacity:0; width:0; height:0; }
+.dest-swatch {
+  height:54px; display:flex; align-items:flex-end; padding:6px 7px;
+  font-size:.6rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+  color:rgba(255,255,255,0.9); line-height:1.1;
 }
-.theme-opt.selected .theme-swatch::after {
-  content: '✓';
-  position: absolute; top: 6px; right: 8px;
-  color: #F5C842; font-size: 11px;
-}
-.swatch-alaska  { background: linear-gradient(135deg, #071828, #7ee8e8 200%); }
-.swatch-caribbean { background: linear-gradient(135deg, #021830, #00d4aa 200%); }
-.swatch-europe  { background: linear-gradient(135deg, #1a0e2e, #c9a0e0 200%); }
+.dest-opt.selected .dest-swatch::after { content:'✓'; position:absolute; top:5px; right:7px; color:#F5C842; font-size:10px; }
 
-/* ── SUBMIT ── */
+/* Destination swatches */
+.sw-alaska     { background:linear-gradient(135deg,#071828,#7ee8e8 200%); }
+.sw-caribbean  { background:linear-gradient(135deg,#021830,#00d4aa 200%); }
+.sw-europe     { background:linear-gradient(135deg,#1a0e2e,#c9a0e0 200%); }
+.sw-asia       { background:linear-gradient(135deg,#1a0808,#ff6b6b 200%); }
+.sw-australia  { background:linear-gradient(135deg,#0d1f0a,#76c442 200%); }
+.sw-bahamas    { background:linear-gradient(135deg,#012030,#00e5ff 200%); }
+.sw-hawaii     { background:linear-gradient(135deg,#1a0530,#ff4081 200%); }
+.sw-mexico     { background:linear-gradient(135deg,#1a0e00,#ff9800 200%); }
+.sw-canada     { background:linear-gradient(135deg,#0a0a1a,#ef5350 200%); }
+
+/* Submit */
 .btn-board {
-  width: 100%;
-  margin-top: 24px;
-  padding: 15px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(135deg, #1a6b6b, #1a5080);
-  color: #fff;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s;
+  width:100%; margin-top:20px; padding:14px;
+  border-radius:10px; border:none;
+  background:linear-gradient(135deg,#1a6b6b,#1a5080);
+  color:#fff; font-family:'Montserrat',sans-serif;
+  font-size:.82rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  cursor:pointer; transition:opacity .2s, transform .15s;
 }
-.btn-board:hover { opacity: 0.9; transform: translateY(-1px); }
-.btn-board:active { transform: translateY(0); }
+.btn-board:hover { opacity:.9; transform:translateY(-1px); }
+.error-msg { color:#ff8a80; font-size:.7rem; margin-top:6px; text-align:center; min-height:16px; }
 
-.error-msg {
-  color: #ff8a80;
-  font-size: 0.72rem;
-  margin-top: 8px;
-  text-align: center;
-  min-height: 18px;
-}
-
-/* ── MAIN SCENE ── */
-#main-screen { display: none; }
-
+/* ════════════ MAIN SCENE ════════════ */
+#main-screen { display:none; }
 .scene {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px 220px;
-  z-index: 1;
+  position:relative; min-height:100vh;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:60px 20px 230px; z-index:1;
 }
 
-/* ── MOON / CELESTIAL ── */
-.moon {
-  position: fixed;
-  top: 48px; right: 6vw;
-  width: 64px; height: 64px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 40%, #fffbe6, #f5c842);
-  box-shadow: 0 0 40px var(--moon-glow, rgba(245,200,66,0.35)), 0 0 80px var(--moon-glow, rgba(245,200,66,0.1));
-  z-index: 1;
-  animation: moonGlow 6s ease-in-out infinite alternate;
-  transition: box-shadow var(--transition-speed);
-}
-@keyframes moonGlow {
-  from { opacity: 0.85; }
-  to   { opacity: 1; }
-}
+/* Header */
+.eyebrow { font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--accent); margin-bottom:9px; font-weight:600; transition:color .5s; }
+.ship-name-display { font-family:'Playfair Display',serif; font-size:clamp(.9rem,2.5vw,1.25rem); font-weight:400; font-style:italic; color:var(--text-sub); margin-bottom:2px; transition:color .5s; }
+.ship-name-display strong { font-style:normal; font-weight:900; color:var(--gold); }
+h1 { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,5.5vw,4.2rem); font-weight:900; line-height:1.05; color:var(--text-primary); margin-bottom:4px; text-align:center; transition:color .5s; }
+h1 em { font-style:italic; color:var(--accent); transition:color .5s; }
+.subhead { font-size:clamp(.72rem,1.8vw,.88rem); font-weight:300; letter-spacing:.1em; color:var(--text-sub); transition:color .5s; }
 
-/* Alaska aurora */
-.aurora {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: 45vh;
-  pointer-events: none;
-  z-index: 0;
-  background: linear-gradient(180deg,
-    transparent 0%,
-    rgba(60, 220, 180, 0.06) 30%,
-    rgba(60, 180, 220, 0.1) 50%,
-    rgba(120, 60, 220, 0.06) 70%,
-    transparent 100%);
-  animation: auroraWave 8s ease-in-out infinite alternate;
-}
-.theme-alaska .aurora { display: block; }
-@keyframes auroraWave {
-  from { opacity: 0.4; transform: scaleX(1); }
-  to   { opacity: 1; transform: scaleX(1.05); }
-}
-
-/* Caribbean sun glow */
-.sun-glow {
-  display: none;
-  position: fixed;
-  top: -80px; right: 4vw;
-  width: 200px; height: 200px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,180,60,0.18) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-  animation: sunPulse 5s ease-in-out infinite alternate;
-}
-.theme-caribbean .sun-glow { display: block; }
-@keyframes sunPulse {
-  from { transform: scale(1); opacity: 0.6; }
-  to   { transform: scale(1.2); opacity: 1; }
-}
-
-/* ── HEADER ── */
-.header-area { text-align: center; margin-bottom: 44px; }
-.eyebrow {
-  font-size: 11px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 10px;
-  font-weight: 600;
-  transition: color var(--transition-speed);
-}
-
-.ship-name-display {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1rem, 3vw, 1.4rem);
-  font-weight: 400;
-  font-style: italic;
-  color: rgba(240,248,255,0.5);
-  margin-bottom: 2px;
-}
-.ship-name-display strong {
-  font-style: normal;
-  font-weight: 900;
-  color: var(--gold);
-}
-
-h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2.4rem, 6vw, 4.5rem);
-  font-weight: 900;
-  line-height: 1.05;
-  color: var(--white);
-  margin-bottom: 4px;
-}
-h1 em { font-style: italic; color: var(--accent); transition: color var(--transition-speed); }
-
-.subhead {
-  font-size: clamp(0.75rem, 2vw, 0.9rem);
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  color: var(--text-sub);
-  transition: color var(--transition-speed);
-}
-
-/* ── PORTHOLES ── */
-.countdown {
-  display: flex;
-  gap: clamp(10px, 2.5vw, 28px);
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 44px;
-}
-.porthole-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+/* Portholes */
+.countdown { display:flex; gap:clamp(8px,2vw,24px); flex-wrap:wrap; justify-content:center; margin-bottom:40px; }
+.porthole-wrap { display:flex; flex-direction:column; align-items:center; gap:11px; }
 .porthole {
-  position: relative;
-  width: clamp(74px, 17vw, 132px);
-  height: clamp(74px, 17vw, 132px);
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, var(--porthole-bg1), var(--porthole-bg2));
-  border: 3px solid var(--porthole-border);
-  box-shadow:
-    0 0 0 6px var(--porthole-ring1),
-    0 0 0 9px var(--porthole-ring2),
-    0 0 30px rgba(0,0,0,0.3),
-    inset 0 2px 8px rgba(255,255,255,0.05),
-    inset 0 -2px 8px rgba(0,0,0,0.4);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+  position:relative;
+  width:clamp(70px,16vw,128px); height:clamp(70px,16vw,128px);
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, var(--porthole-inner1), var(--porthole-inner2));
+  border:3px solid var(--porthole-border-color);
+  box-shadow:0 0 0 6px var(--porthole-ring1),0 0 0 9px var(--porthole-ring2),0 0 24px rgba(0,0,0,.3),inset 0 2px 8px rgba(255,255,255,.06),inset 0 -2px 8px rgba(0,0,0,.4);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  transition:border-color .5s, box-shadow .5s, background .5s;
 }
-.porthole::before {
-  content: '';
-  position: absolute; inset: -14px;
-  border-radius: 50%;
-  border: 3px dashed rgba(255,255,255,0.06);
-}
-.porthole-number {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.8rem, 5.5vw, 3.5rem);
-  font-weight: 900;
-  color: var(--gold);
-  text-shadow: 0 0 20px rgba(245,200,66,0.5);
-  line-height: 1;
-  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
-  position: relative; z-index: 1;
-}
-.porthole-number.flip { transform: scale(1.25); opacity: 0.5; }
-.porthole-label {
-  font-size: clamp(0.58rem, 1.3vw, 0.7rem);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  font-weight: 700;
-  color: rgba(240,248,255,0.35);
-}
-.sep {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.4rem, 4vw, 2.8rem);
-  color: var(--gold-dim);
-  opacity: 0.35;
-  line-height: 1;
-  padding-top: clamp(24px, 4.5vw, 42px);
-}
+.porthole::before { content:''; position:absolute; inset:-14px; border-radius:50%; border:3px dashed rgba(255,255,255,.06); }
+.porthole-number { font-family:'Playfair Display',serif; font-size:clamp(1.7rem,5vw,3.3rem); font-weight:900; color:var(--number-color); text-shadow:0 0 18px rgba(245,200,66,.5); line-height:1; transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .3s,color .5s; position:relative; z-index:1; }
+body.day .porthole-number { text-shadow:0 2px 8px rgba(0,0,0,.2); }
+.porthole-number.flip { transform:scale(1.25); opacity:.5; }
+.porthole-label { font-size:clamp(.55rem,1.2vw,.68rem); letter-spacing:.22em; text-transform:uppercase; font-weight:700; color:var(--text-muted); }
+.sep { font-family:'Playfair Display',serif; font-size:clamp(1.3rem,3.5vw,2.6rem); color:var(--gold-dim); opacity:.35; line-height:1; padding-top:clamp(22px,4vw,40px); }
 
-/* ── BADGE + PROGRESS ── */
-.bottom-area { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.date-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--badge-border);
-  border-radius: 100px;
-  padding: 9px 22px;
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
-  color: rgba(240,248,255,0.6);
-  transition: border-color var(--transition-speed);
-}
-.date-badge strong { color: var(--accent); font-weight: 600; transition: color var(--transition-speed); }
-.progress-wrap { width: min(400px, 88vw); }
-.progress-label {
-  display: flex; justify-content: space-between;
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(240,248,255,0.25);
-  margin-bottom: 7px;
-}
-.progress-track {
-  height: 3px;
-  background: rgba(255,255,255,0.07);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--progress-start), var(--progress-end));
-  border-radius: 2px;
-  transition: width 1s ease, background var(--transition-speed);
-  box-shadow: 0 0 8px rgba(245,200,66,0.3);
-}
-.progress-pct { text-align: center; font-size: 0.65rem; color: rgba(240,248,255,0.2); margin-top: 5px; letter-spacing: 0.08em; }
+/* Badge + progress */
+.bottom-area { display:flex; flex-direction:column; align-items:center; gap:9px; }
+.date-badge { display:inline-flex; align-items:center; gap:9px; background:rgba(255,255,255,.06); border:1px solid var(--badge-border); border-radius:100px; padding:8px 20px; font-size:.78rem; letter-spacing:.05em; color:var(--text-sub); transition:border-color .5s; }
+.date-badge strong { color:var(--accent); font-weight:600; transition:color .5s; }
+.progress-wrap { width:min(380px,88vw); }
+.progress-label { display:flex; justify-content:space-between; font-size:.63rem; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; }
+.progress-track { height:3px; background:rgba(255,255,255,.1); border-radius:2px; overflow:hidden; }
+.progress-fill { height:100%; background:linear-gradient(90deg,var(--prog1,#7ee8e8),var(--prog2,#F5C842)); border-radius:2px; transition:width 1s ease, background .5s; }
+.progress-pct { text-align:center; font-size:.62rem; color:var(--text-muted); margin-top:4px; letter-spacing:.08em; }
+.change-link { font-size:.66rem; color:var(--text-muted); text-decoration:none; letter-spacing:.1em; border-bottom:1px solid rgba(255,255,255,.15); cursor:pointer; margin-top:4px; transition:color .2s; }
+.change-link:hover { color:var(--text-sub); }
 
-/* ── CHANGE LINK ── */
-.change-link {
-  font-size: 0.68rem;
-  color: rgba(240,248,255,0.25);
-  text-decoration: none;
-  letter-spacing: 0.1em;
-  border-bottom: 1px solid rgba(240,248,255,0.1);
-  cursor: pointer;
-  margin-top: 6px;
-  transition: color 0.2s;
-}
-.change-link:hover { color: rgba(240,248,255,0.5); }
-
-/* ── OCEAN ── */
-.ocean-scene {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  height: 200px;
-  pointer-events: none;
-  z-index: 2;
-}
-.wave-layer { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; }
-.wave-layer svg { width: 100%; height: 100%; }
-.wave-back  { animation: waveScroll 14s linear infinite; opacity: 0.45; }
-.wave-mid   { animation: waveScroll 10s linear infinite reverse; opacity: 0.65; }
-.wave-front { animation: waveScroll 7s linear infinite; opacity: 1; }
-@keyframes waveScroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
+/* ── Ocean ── */
+.ocean-scene { position:fixed; bottom:0; left:0; right:0; height:210px; pointer-events:none; z-index:2; }
+.wave-layer { position:absolute; bottom:0; left:0; width:200%; height:100%; }
+.wave-layer svg { width:100%; height:100%; }
+.wave-back  { animation:waveScroll 14s linear infinite; opacity:.45; }
+.wave-mid   { animation:waveScroll 10s linear infinite reverse; opacity:.65; }
+.wave-front { animation:waveScroll 7s linear infinite; opacity:1; }
+@keyframes waveScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
 /* Silhouettes */
-.silhouette {
-  position: absolute;
-  bottom: 90px;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 0.8s ease;
-}
-.sil-alaska   { right: 0; bottom: 80px; }
-.sil-europe   { left: 0; bottom: 80px; }
-.sil-caribbean{ right: 20px; bottom: 76px; }
-.theme-alaska   .sil-alaska    { opacity: 0.15; }
-.theme-europe   .sil-europe    { opacity: 0.12; }
-.theme-caribbean .sil-caribbean { opacity: 0.2; }
+.silhouette { position:absolute; pointer-events:none; z-index:1; opacity:0; transition:opacity .8s ease; }
+.sil-right { right:0; bottom:85px; }
+.sil-left  { left:0; bottom:85px; }
+.sil-center { left:50%; transform:translateX(-50%); bottom:80px; }
 
 /* Ship */
-.ship-wrap {
-  position: absolute;
-  bottom: 95px; left: 50%;
-  transform: translateX(-50%);
-  animation: shipBob 4s ease-in-out infinite;
-  z-index: 3;
-}
-@keyframes shipBob {
-  0%, 100% { transform: translateX(-50%) translateY(0) rotate(-0.5deg); }
-  50%       { transform: translateX(-50%) translateY(-8px) rotate(0.5deg); }
-}
-.ship-svg { width: clamp(150px, 24vw, 270px); filter: drop-shadow(0 6px 20px rgba(0,0,0,0.5)); }
+.ship-wrap { position:absolute; bottom:100px; left:50%; transform:translateX(-50%); animation:shipBob 4s ease-in-out infinite; z-index:3; }
+@keyframes shipBob { 0%,100%{transform:translateX(-50%) translateY(0) rotate(-.5deg)} 50%{transform:translateX(-50%) translateY(-8px) rotate(.5deg)} }
+.ship-svg { width:clamp(140px,22vw,260px); filter:drop-shadow(0 6px 20px rgba(0,0,0,.5)); }
+.smoke { position:absolute; bottom:100%; animation:smokeRise var(--sd) ease-out infinite; opacity:0; border-radius:50%; background:rgba(200,220,240,.18); }
+@keyframes smokeRise { 0%{opacity:0;transform:translateY(0) scale(.4)} 20%{opacity:.6} 100%{opacity:0;transform:translateY(-50px) scale(1.8)} }
 
-.smoke {
-  position: absolute;
-  bottom: 100%;
-  animation: smokeRise var(--sd) ease-out infinite;
-  opacity: 0;
-  border-radius: 50%;
-  background: rgba(200,220,240,0.18);
-}
-@keyframes smokeRise {
-  0%   { opacity: 0; transform: translateY(0) scale(0.4); }
-  20%  { opacity: 0.6; }
-  100% { opacity: 0; transform: translateY(-50px) scale(1.8); }
-}
+/* Gyro btn */
+#motion-btn { position:fixed; bottom:220px; left:50%; transform:translateX(-50%); z-index:10; display:none; align-items:center; gap:8px; background:rgba(7,24,40,.85); border:1px solid rgba(126,232,232,.4); color:#7ee8e8; font-family:'Montserrat',sans-serif; font-size:.7rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:9px 18px; border-radius:100px; cursor:pointer; backdrop-filter:blur(8px); }
+.gyro-active .ship-wrap { animation:none !important; }
 
-/* ── GYRO BUTTON ── */
-#motion-btn {
-  position: fixed;
-  bottom: 210px; left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  display: none;
-  align-items: center;
-  gap: 8px;
-  background: rgba(7,24,40,0.85);
-  border: 1px solid rgba(126,232,232,0.4);
-  color: #7ee8e8;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 9px 18px;
-  border-radius: 100px;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
-  animation: btnPulse 2s ease-in-out infinite alternate;
-}
-@keyframes btnPulse {
-  from { box-shadow: 0 0 12px rgba(126,232,232,0.15); }
-  to   { box-shadow: 0 0 28px rgba(126,232,232,0.35); }
-}
-.gyro-active .ship-wrap { animation: none !important; }
+/* Arrived */
+.arrived { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,5vw,3.5rem); font-weight:900; color:var(--gold); text-align:center; animation:pulse 2s ease-in-out infinite alternate; }
+@keyframes pulse { from{opacity:.8} to{opacity:1} }
 
-/* ── ARRIVED ── */
-.arrived {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.8rem, 5vw, 3.5rem);
-  font-weight: 900;
-  color: var(--gold);
-  text-align: center;
-  animation: pulse 2s ease-in-out infinite alternate;
-}
-@keyframes pulse { from { opacity: 0.8; } to { opacity: 1; } }
-
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
-}
+@media (prefers-reduced-motion:reduce) { *{animation:none!important;transition:none!important} }
 </style>
 </head>
-<body class="theme-alaska">
+<body class="night dest-caribbean">
 
 <div class="stars" id="stars"></div>
+<div class="clouds" id="clouds"></div>
 
-<!-- Setup Screen -->
+<!-- Day/Night toggle (always visible on main screen) -->
+<div class="dn-toggle" id="dn-toggle" style="display:none">
+  <div class="toggle-track"><div class="toggle-thumb"></div></div>
+  <span class="toggle-label" id="toggle-label">Night</span>
+</div>
+
+<!-- ════ SETUP SCREEN ════ -->
 <div id="setup-screen">
+  <!-- day/night toggle on setup too -->
+  <div class="dn-toggle" id="dn-toggle-setup" style="position:fixed;top:16px;left:16px;z-index:200">
+    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+    <span class="toggle-label" id="toggle-label-setup">Night</span>
+  </div>
+
   <div class="boarding-card">
     <div class="card-logo">
       <img src="https://res.cloudinary.com/cotw/image/upload/v1785339426/anklo_vn5nyx.png" alt="Logo">
       <span>Cruise Countdown</span>
     </div>
     <h2 class="card-title">Plan your countdown</h2>
-    <p class="card-sub">SAVE THE LINK TO BOOKMARK YOUR CRUISE</p>
+    <p class="card-sub">BOOKMARK THE LINK TO SAVE YOUR CRUISE</p>
 
     <label class="field-label">Ship name</label>
     <div class="ship-row">
@@ -666,19 +403,43 @@ h1 em { font-style: italic; color: var(--accent); transition: color var(--transi
     <label class="field-label" for="date-input">Embarkation date &amp; time</label>
     <input type="datetime-local" class="date-input" id="date-input">
 
-    <label class="field-label" style="margin-top:20px;">Destination theme</label>
-    <div class="theme-grid">
-      <label class="theme-opt selected" data-theme="alaska">
-        <input type="radio" name="theme" value="alaska" checked>
-        <div class="theme-swatch swatch-alaska">🏔 Alaska</div>
+    <label class="field-label" style="margin-top:18px;">Destination</label>
+    <div class="dest-grid">
+      <label class="dest-opt" data-dest="alaska">
+        <input type="radio" name="dest" value="alaska">
+        <div class="dest-swatch sw-alaska">🏔 Alaska</div>
       </label>
-      <label class="theme-opt" data-theme="caribbean">
-        <input type="radio" name="theme" value="caribbean">
-        <div class="theme-swatch swatch-caribbean">🌴 Caribbean</div>
+      <label class="dest-opt" data-dest="caribbean">
+        <input type="radio" name="dest" value="caribbean">
+        <div class="dest-swatch sw-caribbean">🌴 Caribbean</div>
       </label>
-      <label class="theme-opt" data-theme="europe">
-        <input type="radio" name="theme" value="europe">
-        <div class="theme-swatch swatch-europe">🏰 Europe</div>
+      <label class="dest-opt" data-dest="europe">
+        <input type="radio" name="dest" value="europe">
+        <div class="dest-swatch sw-europe">🏰 Europe</div>
+      </label>
+      <label class="dest-opt" data-dest="asia">
+        <input type="radio" name="dest" value="asia">
+        <div class="dest-swatch sw-asia">🏯 Asia</div>
+      </label>
+      <label class="dest-opt" data-dest="australia">
+        <input type="radio" name="dest" value="australia">
+        <div class="dest-swatch sw-australia">🦘 Australia</div>
+      </label>
+      <label class="dest-opt" data-dest="bahamas">
+        <input type="radio" name="dest" value="bahamas">
+        <div class="dest-swatch sw-bahamas">🐚 Bahamas</div>
+      </label>
+      <label class="dest-opt" data-dest="hawaii">
+        <input type="radio" name="dest" value="hawaii">
+        <div class="dest-swatch sw-hawaii">🌺 Hawaii</div>
+      </label>
+      <label class="dest-opt" data-dest="mexico">
+        <input type="radio" name="dest" value="mexico">
+        <div class="dest-swatch sw-mexico">🌵 Mexico</div>
+      </label>
+      <label class="dest-opt selected" data-dest="canada">
+        <input type="radio" name="dest" value="canada" checked>
+        <div class="dest-swatch sw-canada">🍁 Canada</div>
       </label>
     </div>
 
@@ -687,47 +448,33 @@ h1 em { font-style: italic; color: var(--accent); transition: color var(--transi
   </div>
 </div>
 
-<!-- Main Countdown Screen -->
+<!-- ════ MAIN SCREEN ════ -->
 <div id="main-screen">
   <div class="aurora"></div>
-  <div class="sun-glow"></div>
+  <div class="sun"></div>
   <div class="moon"></div>
 
   <div class="scene">
-    <div class="header-area">
+    <div style="text-align:center;margin-bottom:40px">
       <p class="eyebrow" id="eyebrow-text">⚓ Bon Voyage Countdown</p>
       <p class="ship-name-display">The <strong id="display-ship">Wonder</strong> of the Seas</p>
-      <h1>Days Until We<br><em id="theme-headline">Explore</em></h1>
+      <h1>Days Until We<br><em id="theme-headline">Set Sail</em></h1>
       <p class="subhead" id="display-date-sub">Embarkation · Loading...</p>
     </div>
 
     <div id="countdown-wrap">
-      <div class="countdown" id="countdown">
-        <div class="porthole-wrap">
-          <div class="porthole"><span class="porthole-number" id="days">--</span></div>
-          <span class="porthole-label">Days</span>
-        </div>
+      <div class="countdown">
+        <div class="porthole-wrap"><div class="porthole"><span class="porthole-number" id="days">--</span></div><span class="porthole-label">Days</span></div>
         <div class="sep">:</div>
-        <div class="porthole-wrap">
-          <div class="porthole"><span class="porthole-number" id="hours">--</span></div>
-          <span class="porthole-label">Hours</span>
-        </div>
+        <div class="porthole-wrap"><div class="porthole"><span class="porthole-number" id="hours">--</span></div><span class="porthole-label">Hours</span></div>
         <div class="sep">:</div>
-        <div class="porthole-wrap">
-          <div class="porthole"><span class="porthole-number" id="minutes">--</span></div>
-          <span class="porthole-label">Minutes</span>
-        </div>
+        <div class="porthole-wrap"><div class="porthole"><span class="porthole-number" id="minutes">--</span></div><span class="porthole-label">Minutes</span></div>
         <div class="sep">:</div>
-        <div class="porthole-wrap">
-          <div class="porthole"><span class="porthole-number" id="seconds">--</span></div>
-          <span class="porthole-label">Seconds</span>
-        </div>
+        <div class="porthole-wrap"><div class="porthole"><span class="porthole-number" id="seconds">--</span></div><span class="porthole-label">Seconds</span></div>
       </div>
 
       <div class="bottom-area">
-        <div class="date-badge">
-          ⚓ Departing <strong id="badge-date">—</strong>
-        </div>
+        <div class="date-badge">⚓ Departing <strong id="badge-date">—</strong></div>
         <div class="progress-wrap">
           <div class="progress-label"><span>Journey begins</span><span>Bon Voyage!</span></div>
           <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
@@ -741,70 +488,104 @@ h1 em { font-style: italic; color: var(--accent); transition: color var(--transi
   <!-- Ocean -->
   <div class="ocean-scene">
     <div class="wave-layer wave-back">
-      <svg viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path id="wb1" d="M0,80 C180,40 360,120 540,80 C720,40 900,120 1080,80 C1260,40 1350,100 1440,80 L1440,200 L0,200 Z"/>
-        <path id="wb2" d="M1440,80 C1260,40 1080,120 900,80 C720,40 540,120 360,80 C180,40 90,100 0,80 L0,200 L1440,200 Z"/>
+      <svg viewBox="0 0 1440 210" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="wb1" d="M0,80 C180,40 360,120 540,80 C720,40 900,120 1080,80 C1260,40 1350,100 1440,80 L1440,210 L0,210 Z"/>
+        <path id="wb2" d="M1440,80 C1260,40 1080,120 900,80 C720,40 540,120 360,80 C180,40 90,100 0,80 L0,210 L1440,210 Z"/>
       </svg>
     </div>
     <div class="wave-layer wave-mid">
-      <svg viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path id="wm1" d="M0,100 C200,60 400,140 600,100 C800,60 1000,140 1200,100 C1320,76 1380,116 1440,100 L1440,200 L0,200 Z"/>
-        <path id="wm2" d="M1440,100 C1240,60 1040,140 840,100 C640,60 440,140 240,100 C120,76 60,116 0,100 L0,200 L1440,200 Z"/>
+      <svg viewBox="0 0 1440 210" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="wm1" d="M0,100 C200,60 400,140 600,100 C800,60 1000,140 1200,100 C1320,76 1380,116 1440,100 L1440,210 L0,210 Z"/>
+        <path id="wm2" d="M1440,100 C1240,60 1040,140 840,100 C640,60 440,140 240,100 C120,76 60,116 0,100 L0,210 L1440,210 Z"/>
       </svg>
     </div>
     <div class="wave-layer wave-front">
-      <svg viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path id="wf1" d="M0,120 C180,80 360,155 540,120 C720,85 900,155 1080,120 C1260,85 1350,135 1440,120 L1440,200 L0,200 Z"/>
-        <path id="wf2" d="M1440,120 C1260,80 1080,155 900,120 C720,85 540,155 360,120 C180,85 90,135 0,120 L0,200 L1440,200 Z"/>
+      <svg viewBox="0 0 1440 210" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="wf1" d="M0,120 C180,80 360,155 540,120 C720,85 900,155 1080,120 C1260,85 1350,135 1440,120 L1440,210 L0,210 Z"/>
+        <path id="wf2" d="M1440,120 C1260,80 1080,155 900,120 C720,85 540,155 360,120 C180,85 90,135 0,120 L0,210 L1440,210 Z"/>
       </svg>
     </div>
 
-    <!-- Alaska: glacier silhouette -->
-    <svg class="silhouette sil-alaska" width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,120 L0,60 L40,20 L70,45 L110,5 L145,35 L180,15 L210,40 L250,0 L280,30 L320,10 L320,120 Z" fill="white"/>
+    <!-- Alaska: glacier -->
+    <svg id="sil-alaska" class="silhouette sil-right" width="300" height="110" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,110 L0,55 L35,18 L62,42 L100,4 L132,32 L165,12 L195,38 L232,0 L262,28 L300,8 L300,110 Z" fill="white" opacity=".9"/>
     </svg>
-    <!-- Europe: castle silhouette -->
-    <svg class="silhouette sil-europe" width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,130 L0,80 L20,80 L20,60 L30,60 L30,50 L40,50 L40,60 L50,60 L50,80 L70,80 L70,40 L80,40 L80,25 L90,25 L90,10 L100,10 L100,25 L110,25 L110,40 L130,40 L130,60 L140,60 L140,45 L150,45 L150,60 L160,60 L160,80 L180,80 L180,55 L190,55 L190,40 L200,40 L200,55 L210,55 L210,80 L240,80 L240,65 L250,65 L250,55 L260,55 L260,65 L270,65 L270,80 L280,80 L280,130 Z" fill="white"/>
+    <!-- Europe: city skyline -->
+    <svg id="sil-europe" class="silhouette sil-left" width="260" height="120" viewBox="0 0 260 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,120 L0,75 L18,75 L18,55 L28,55 L28,42 L38,42 L38,30 L48,30 L48,42 L58,42 L58,55 L78,55 L78,38 L88,38 L88,22 L98,22 L98,8 L108,8 L108,22 L118,22 L118,38 L138,38 L138,55 L148,55 L148,42 L158,42 L158,55 L178,55 L178,48 L188,48 L188,35 L198,35 L198,48 L208,48 L208,65 L228,65 L228,52 L238,52 L238,42 L248,42 L248,52 L258,52 L258,75 L260,75 L260,120 Z" fill="white" opacity=".8"/>
     </svg>
-    <!-- Caribbean: palm silhouette -->
-    <svg class="silhouette sil-caribbean" width="100" height="150" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
-      <path d="M50,150 L44,80 Q20,40 0,30 Q25,55 42,75 L38,30 Q30,5 10,0 Q35,15 40,50 L38,10 Q45,0 50,0 Q55,0 62,10 L60,50 Q65,15 90,0 Q70,5 62,30 L58,75 Q75,55 100,30 Q80,40 56,80 L50,150 Z" fill="#00d4aa"/>
-      <rect x="47" y="100" width="6" height="50" fill="#00d4aa"/>
+    <!-- Asia: pagoda -->
+    <svg id="sil-asia" class="silhouette sil-right" width="180" height="130" viewBox="0 0 180 130" xmlns="http://www.w3.org/2000/svg">
+      <path d="M90,5 L100,25 L145,30 L130,45 L110,42 L115,62 L155,68 L140,82 L118,80 L122,100 L162,108 L145,120 L35,120 L18,108 L58,100 L62,80 L40,82 L25,68 L65,62 L70,42 L50,45 L35,30 L80,25 Z" fill="#b22222" opacity=".8"/>
+      <rect x="82" y="5" width="16" height="115" fill="#8b0000" opacity=".6"/>
+    </svg>
+    <!-- Australia: opera house / rock -->
+    <svg id="sil-australia" class="silhouette sil-right" width="220" height="100" viewBox="0 0 220 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,100 L0,65 Q60,10 90,60 Q110,20 130,58 Q150,5 175,55 L220,55 L220,100 Z" fill="#d2691e" opacity=".7"/>
+    </svg>
+    <!-- Bahamas: lighthouse + beach hut -->
+    <svg id="sil-bahamas" class="silhouette sil-right" width="140" height="120" viewBox="0 0 140 120" xmlns="http://www.w3.org/2000/svg">
+      <rect x="55" y="20" width="20" height="80" fill="#00ced1" opacity=".7"/>
+      <polygon points="55,20 65,5 75,20" fill="#00ced1" opacity=".9"/>
+      <rect x="50" y="18" width="30" height="6" fill="#ff6347" opacity=".8"/>
+      <rect x="50" y="30" width="30" height="6" fill="#ff6347" opacity=".8"/>
+      <polygon points="10,100 50,100 30,75" fill="#f4a460" opacity=".7"/>
+    </svg>
+    <!-- Hawaii: volcano + palm -->
+    <svg id="sil-hawaii" class="silhouette sil-center" width="260" height="120" viewBox="0 0 260 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30,120 L80,30 L130,120 Z" fill="#4a4a4a" opacity=".7"/>
+      <path d="M80,30 L83,22 L87,30 Z" fill="#ff4500" opacity=".9"/>
+      <path d="M120,120 L180,25 L240,120 Z" fill="#3a3a3a" opacity=".6"/>
+      <!-- palm right -->
+      <rect x="228" y="70" width="5" height="50" fill="#2e8b57" opacity=".8"/>
+      <path d="M230,70 Q210,55 195,65 Q212,60 230,72 Z" fill="#2e8b57" opacity=".8"/>
+      <path d="M230,72 Q250,55 265,62 Q248,58 231,74 Z" fill="#2e8b57" opacity=".8"/>
+    </svg>
+    <!-- Mexico: pyramid -->
+    <svg id="sil-mexico" class="silhouette sil-right" width="200" height="110" viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100,10 L160,70 L140,70 L140,85 L120,85 L120,100 L80,100 L80,85 L60,85 L60,70 L40,70 Z" fill="#8b4513" opacity=".75"/>
+      <rect x="90" y="0" width="20" height="12" fill="#8b4513" opacity=".9"/>
+    </svg>
+    <!-- Canada: pine trees -->
+    <svg id="sil-canada" class="silhouette sil-left" width="280" height="120" viewBox="0 0 280 120" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="40,120 60,120 50,90 70,95 50,65 65,70 45,35 65,42 50,8 35,42 55,35 35,70 50,65 30,95 50,90" fill="#1a4a1a" opacity=".8"/>
+      <polygon points="110,120 130,120 120,95 138,100 118,72 132,77 115,45 130,52 118,18 106,52 120,45 103,77 117,72 97,100 117,95" fill="#1a5a1a" opacity=".75"/>
+      <polygon points="175,120 195,120 185,98 200,102 183,78 196,83 180,55 193,61 182,28 171,61 183,55 167,83 180,78 160,102 180,98" fill="#1a4a1a" opacity=".8"/>
+      <polygon points="240,120 258,120 249,100 263,104 248,82 260,86 246,60 257,65 248,38 239,65 249,60 235,86 247,82 232,104 249,100" fill="#1a5a1a" opacity=".7"/>
     </svg>
 
     <!-- Ship -->
     <div class="ship-wrap">
-      <div class="smoke" style="width:14px;height:14px;left:60px;--sd:3s;animation-delay:0s;"></div>
-      <div class="smoke" style="width:10px;height:10px;left:67px;--sd:3s;animation-delay:1s;"></div>
-      <div class="smoke" style="width:16px;height:16px;left:54px;--sd:3s;animation-delay:2s;"></div>
+      <div class="smoke" style="width:14px;height:14px;left:58px;--sd:3s;animation-delay:0s;"></div>
+      <div class="smoke" style="width:10px;height:10px;left:65px;--sd:3s;animation-delay:1s;"></div>
+      <div class="smoke" style="width:16px;height:16px;left:52px;--sd:3s;animation-delay:2s;"></div>
       <svg class="ship-svg" viewBox="0 0 280 120" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20,75 L260,75 L245,100 L35,100 Z" fill="var(--ship-hull,#1a3d6b)" stroke="#2a5c9e" stroke-width="1.5"/>
-        <path d="M30,78 L250,78" stroke="#2e6caa" stroke-width="1" opacity="0.5"/>
-        <path d="M35,95 L245,95" stroke="#F5C842" stroke-width="2.5" opacity="0.7"/>
-        <rect x="70" y="45" width="150" height="30" rx="3" fill="var(--ship-super,#1e4a80)" stroke="#2a5c9e" stroke-width="1"/>
-        <rect x="80" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity="0.8"/>
-        <rect x="108" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity="0.8"/>
-        <rect x="136" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity="0.8"/>
-        <rect x="164" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity="0.8"/>
-        <rect x="82" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.7"/>
-        <rect x="110" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.7"/>
-        <rect x="138" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.7"/>
-        <rect x="166" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.7"/>
-        <rect x="100" y="28" width="80" height="20" rx="3" fill="var(--ship-bridge,#245a9e)" stroke="#3572be" stroke-width="1"/>
-        <rect x="110" y="32" width="14" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.5"/>
-        <rect x="128" y="32" width="14" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.5"/>
-        <rect x="146" y="32" width="14" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.5"/>
-        <rect x="164" y="32" width="10" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity="0.5"/>
-        <rect x="120" y="10" width="20" height="22" rx="4" fill="var(--ship-hull,#1a3d6b)" stroke="#2a5c9e" stroke-width="1.5"/>
-        <rect x="120" y="18" width="20" height="6" fill="#F5C842" opacity="0.8"/>
+        <path d="M20,75 L260,75 L245,100 L35,100 Z" fill="#1a3d6b" stroke="#2a5c9e" stroke-width="1.5"/>
+        <path d="M30,78 L250,78" stroke="#2e6caa" stroke-width="1" opacity=".5"/>
+        <path d="M35,95 L245,95" stroke="#F5C842" stroke-width="2.5" opacity=".7"/>
+        <rect x="70" y="45" width="150" height="30" rx="3" fill="#1e4a80" stroke="#2a5c9e" stroke-width="1"/>
+        <rect x="80" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity=".8"/>
+        <rect x="108" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity=".8"/>
+        <rect x="136" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity=".8"/>
+        <rect x="164" y="50" width="20" height="12" rx="2" fill="#2d6caa" opacity=".8"/>
+        <rect x="82" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity=".7"/>
+        <rect x="110" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity=".7"/>
+        <rect x="138" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity=".7"/>
+        <rect x="166" y="52" width="6" height="4" rx="1" fill="var(--accent,#4FC3C3)" opacity=".7"/>
+        <rect x="100" y="28" width="80" height="20" rx="3" fill="#245a9e" stroke="#3572be" stroke-width="1"/>
+        <rect x="110" y="32" width="14" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity=".5"/>
+        <rect x="128" y="32" width="14" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity=".5"/>
+        <rect x="146" y="32" width="14" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity=".5"/>
+        <rect x="164" y="32" width="10" height="10" rx="1" fill="var(--accent,#4FC3C3)" opacity=".5"/>
+        <rect x="120" y="10" width="20" height="22" rx="4" fill="#1a3d6b" stroke="#2a5c9e" stroke-width="1.5"/>
+        <rect x="120" y="18" width="20" height="6" fill="#F5C842" opacity=".8"/>
         <path d="M260,75 L270,88 L245,100 Z" fill="#15345a"/>
-        <line x1="70" y1="45" x2="70" y2="75" stroke="#2a5c9e" stroke-width="1" opacity="0.5"/>
-        <line x1="220" y1="45" x2="220" y2="75" stroke="#2a5c9e" stroke-width="1" opacity="0.5"/>
-        <line x1="70" y1="45" x2="220" y2="45" stroke="#3572be" stroke-width="1" opacity="0.4"/>
+        <line x1="70" y1="45" x2="70" y2="75" stroke="#2a5c9e" stroke-width="1" opacity=".5"/>
+        <line x1="220" y1="45" x2="220" y2="75" stroke="#2a5c9e" stroke-width="1" opacity=".5"/>
+        <line x1="70" y1="45" x2="220" y2="45" stroke="#3572be" stroke-width="1" opacity=".4"/>
         <line x1="140" y1="2" x2="140" y2="12" stroke="#F5C842" stroke-width="1.5"/>
         <path d="M140,2 L156,5 L140,9 Z" fill="#F5C842"/>
-        <text x="140" y="91" text-anchor="middle" font-size="11" fill="#F5C842" opacity="0.4" font-family="serif">⚓</text>
+        <text x="140" y="91" text-anchor="middle" font-size="11" fill="#F5C842" opacity=".4" font-family="serif">⚓</text>
       </svg>
     </div>
   </div>
@@ -813,161 +594,170 @@ h1 em { font-style: italic; color: var(--accent); transition: color var(--transi
 </div>
 
 <script>
-// ── STARS ──
+// ════ STARS ════
 const starsEl = document.getElementById('stars');
 for (let i = 0; i < 130; i++) {
-  const s = document.createElement('div');
-  s.className = 'star';
-  const size = Math.random() * 2.5 + 0.5;
-  s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*78}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*6).toFixed(1)}s;`;
+  const s = document.createElement('div'); s.className = 'star';
+  const sz = Math.random() * 2.5 + 0.5;
+  s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*78}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*6).toFixed(1)}s;`;
   starsEl.appendChild(s);
 }
 
-// ── URL PARAMS ──
-function getParams() {
-  const p = new URLSearchParams(location.search);
-  return { depart: p.get('depart'), ship: p.get('ship'), theme: p.get('theme') };
+// ════ CLOUDS ════
+const cloudsEl = document.getElementById('clouds');
+const cloudData = [
+  {w:120,h:40,top:8,delay:0,dur:35},
+  {w:90,h:30,top:14,delay:8,dur:45},
+  {w:150,h:50,top:4,delay:16,dur:38},
+  {w:80,h:28,top:20,delay:24,dur:42},
+  {w:110,h:36,top:10,delay:5,dur:50},
+];
+cloudData.forEach(c => {
+  const d = document.createElement('div'); d.className = 'cloud';
+  d.style.cssText = `width:${c.w}px;height:${c.h}px;top:${c.top}%;--cd:${c.dur}s;animation-delay:-${c.delay}s;border-radius:${c.h}px;`;
+  d.style.setProperty('--cd', c.dur+'s');
+  const b4 = document.createElement('div');
+  b4.style.cssText = `width:${c.w*.6}px;height:${c.h*1.4}px;top:-40%;left:15%;`;
+  const af = document.createElement('div');
+  af.style.cssText = `width:${c.w*.45}px;height:${c.h*1.2}px;top:-25%;left:45%;`;
+  [b4,af].forEach(el => { el.style.borderRadius='50%'; el.style.background='inherit'; el.style.position='absolute'; });
+  d.appendChild(b4); d.appendChild(af);
+  cloudsEl.appendChild(d);
+});
+
+// ════ DESTINATION CONFIG ════
+const DESTS = {
+  alaska:    { eyebrow:'🏔 Alaska Expedition',    headline:'Explore Alaska',    sil:'alaska',    wc:['#0a2030','#0f2e45','#071828'] },
+  caribbean: { eyebrow:'🌴 Caribbean Escape',     headline:'Cruise Paradise',   sil:'caribbean', wc:['#043a5a','#0a5070','#021830'] },
+  europe:    { eyebrow:'🏰 European Voyage',      headline:'Discover Europe',   sil:'europe',    wc:['#1e1035','#2a1848','#1a0e2e'] },
+  asia:      { eyebrow:'🏯 Asian Adventure',      headline:'Sail to Asia',      sil:'asia',      wc:['#1a0808','#260f0f','#150808'] },
+  australia: { eyebrow:'🦘 Australian Journey',   headline:'Sail to Australia', sil:'australia', wc:['#0a2008','#152e0f','#0a1808'] },
+  bahamas:   { eyebrow:'🐚 Bahamas Getaway',      headline:'Sail the Bahamas',  sil:'bahamas',   wc:['#014060','#015080','#012030'] },
+  hawaii:    { eyebrow:'🌺 Hawaiian Escape',       headline:'Aloha, Hawaii',     sil:'hawaii',    wc:['#1a0830','#220a40','#150528'] },
+  mexico:    { eyebrow:'🌵 Mexico Adventure',     headline:'Explore Mexico',    sil:'mexico',    wc:['#1a1000','#261800','#150c00'] },
+  canada:    { eyebrow:'🍁 Canadian Voyage',      headline:'Cruise Canada',     sil:'canada',    wc:['#0d1525','#101d35','#080f1a'] },
+};
+
+// ════ DAY/NIGHT ════
+let isDayMode = false;
+
+function setDayNight(day, persist) {
+  isDayMode = day;
+  document.body.classList.toggle('day', day);
+  document.body.classList.toggle('night', !day);
+  document.querySelectorAll('.toggle-label').forEach(el => el.textContent = day ? 'Day' : 'Night');
+  if (persist) {
+    const url = new URL(location.href);
+    url.searchParams.set('mode', day ? 'day' : 'night');
+    history.replaceState({}, '', url.toString());
+  }
 }
 
-function setParams(depart, ship, theme) {
+document.querySelectorAll('.dn-toggle').forEach(tog => {
+  tog.addEventListener('click', () => setDayNight(!isDayMode, true));
+});
+
+// ════ URL PARAMS ════
+function getParams() {
+  const p = new URLSearchParams(location.search);
+  return { depart: p.get('depart'), ship: p.get('ship'), dest: p.get('dest'), mode: p.get('mode') };
+}
+function setParams(depart, ship, dest) {
   const url = new URL(location.href);
   url.searchParams.set('depart', depart);
   url.searchParams.set('ship', ship);
-  url.searchParams.set('theme', theme);
+  url.searchParams.set('dest', dest);
   history.replaceState({}, '', url.toString());
 }
-
-// Parse mmddyyhhmm → Date
 function parseDepart(str) {
-  if (!str || str.length < 10) return null;
-  const mo = str.slice(0,2), dd = str.slice(2,4), yy = str.slice(4,6);
-  const hh = str.slice(6,8) || '10', mm = str.slice(8,10) || '00';
-  const year = 2000 + parseInt(yy);
-  return new Date(year, parseInt(mo)-1, parseInt(dd), parseInt(hh), parseInt(mm));
+  if (!str || str.length < 8) return null;
+  const mo=str.slice(0,2),dd=str.slice(2,4),yy=str.slice(4,6);
+  const hh=str.slice(6,8)||'10',mm=str.slice(8,10)||'00';
+  return new Date(2000+parseInt(yy),parseInt(mo)-1,parseInt(dd),parseInt(hh),parseInt(mm));
+}
+function encodeDepart(val) {
+  const [datePart,timePart]=val.split('T');
+  const [y,mo,dd]=datePart.split('-');
+  const [hh,mm]=(timePart||'10:00').split(':');
+  return `${mo}${dd}${y.slice(2)}${hh}${mm}`;
 }
 
-function encodeDepart(dtLocal) {
-  // dtLocal is value from datetime-local input: "2026-10-10T10:00"
-  const [datePart, timePart] = dtLocal.split('T');
-  const [y, mo, dd] = datePart.split('-');
-  const [hh, mm] = (timePart || '10:00').split(':');
-  const yy = y.slice(2);
-  return `${mo}${dd}${yy}${hh}${mm}`;
+// ════ APPLY DESTINATION ════
+let currentDest = 'caribbean';
+function applyDest(dest) {
+  currentDest = dest;
+  const allDests = Object.keys(DESTS);
+  document.body.classList.remove(...allDests.map(d=>'dest-'+d));
+  document.body.classList.add('dest-'+dest);
+  const cfg = DESTS[dest] || DESTS.caribbean;
+  const el = document.getElementById('eyebrow-text');
+  if (el) el.textContent = cfg.eyebrow;
+  const hEl = document.querySelector('h1 em');
+  if (hEl) hEl.textContent = cfg.headline;
+
+  // silhouettes
+  document.querySelectorAll('.silhouette').forEach(s => s.style.opacity = '0');
+  const activeSil = document.getElementById('sil-'+cfg.sil);
+  if (activeSil) activeSil.style.opacity = '1';
+
+  // waves
+  const [c1,c2,c3] = isDayMode
+    ? ['rgba(255,255,255,0.3)','rgba(255,255,255,0.5)','rgba(255,255,255,0.7)']
+    : cfg.wc;
+  ['wb1','wb2'].forEach(id => document.getElementById(id).setAttribute('fill', isDayMode ? '#ffffff33' : cfg.wc[0]));
+  ['wm1','wm2'].forEach(id => document.getElementById(id).setAttribute('fill', isDayMode ? '#ffffff55' : cfg.wc[1]));
+  ['wf1','wf2'].forEach(id => document.getElementById(id).setAttribute('fill', isDayMode ? '#ffffffcc' : cfg.wc[2]));
 }
 
-// ── THEME CONFIG ──
-const THEMES = {
-  alaska: {
-    eyebrow: '🏔 Alaska Expedition',
-    headline: 'Sail Alaska',
-    waterColors: ['#0a2030', '#0f3050', '#071828'],
-    emoji: '🏔',
-  },
-  caribbean: {
-    eyebrow: '🌴 Caribbean Escape',
-    headline: 'Cruise Paradise',
-    waterColors: ['#043a5a', '#0a5070', '#021830'],
-    emoji: '🌴',
-  },
-  europe: {
-    eyebrow: '🏰 European Voyage',
-    headline: 'Discover Europe',
-    waterColors: ['#1e1035', '#2a1848', '#1a0e2e'],
-    emoji: '🏰',
-  },
-};
-
-// ── APPLY THEME ──
-function applyTheme(theme) {
-  const body = document.body;
-  body.classList.remove('theme-alaska','theme-caribbean','theme-europe');
-  body.classList.add('theme-' + theme);
-  const cfg = THEMES[theme] || THEMES.alaska;
-  document.getElementById('eyebrow-text').textContent = cfg.eyebrow;
-  document.getElementById('theme-headline').textContent = cfg.headline.split(' ').slice(1).join(' ');
-  const h1Em = document.querySelector('h1 em');
-  if (h1Em) h1Em.textContent = cfg.headline.split(' ').slice(1).join(' ');
-
-  // Update wave colors
-  const [c1, c2, c3] = cfg.waterColors;
-  document.getElementById('wb1').setAttribute('fill', c1);
-  document.getElementById('wb2').setAttribute('fill', c1);
-  document.getElementById('wm1').setAttribute('fill', c2);
-  document.getElementById('wm2').setAttribute('fill', c2);
-  document.getElementById('wf1').setAttribute('fill', c3);
-  document.getElementById('wf2').setAttribute('fill', c3);
-}
-
-// ── COUNTDOWN LOGIC ──
-let countdownInterval = null;
-let targetDate = null;
-
+// ════ COUNTDOWN ════
+let countdownInterval = null, targetDate = null;
 function pad(n) { return String(n).padStart(2,'0'); }
-
 function animateNumber(el, val) {
   if (el.textContent === val) return;
   el.classList.add('flip');
   setTimeout(() => { el.textContent = val; el.classList.remove('flip'); }, 150);
 }
-
-function formatDateDisplay(d) {
-  return d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' })
-    + ' at ' + d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
-}
-
 function tick() {
   if (!targetDate) return;
-  const now = new Date();
-  const diff = targetDate - now;
+  const now = new Date(), diff = targetDate - now;
   if (diff <= 0) {
     document.getElementById('countdown-wrap').innerHTML = '<p class="arrived">🛳️ Bon Voyage! Set sail!</p>';
-    clearInterval(countdownInterval);
-    return;
+    clearInterval(countdownInterval); return;
   }
-  const totalSec = Math.floor(diff / 1000);
-  animateNumber(document.getElementById('days'),    pad(Math.floor(totalSec / 86400)));
-  animateNumber(document.getElementById('hours'),   pad(Math.floor((totalSec % 86400) / 3600)));
-  animateNumber(document.getElementById('minutes'), pad(Math.floor((totalSec % 3600) / 60)));
-  animateNumber(document.getElementById('seconds'), pad(totalSec % 60));
-
-  const rangeMs = 365 * 24 * 60 * 60 * 1000;
-  const startRef = new Date(targetDate - rangeMs);
-  const elapsed = Math.max(0, now - startRef);
-  const pct = Math.min(100, (elapsed / (targetDate - startRef)) * 100);
-  document.getElementById('progress-fill').style.width = pct.toFixed(2) + '%';
-  document.getElementById('progress-pct').textContent = pct.toFixed(1) + '% of the way there';
+  const s = Math.floor(diff/1000);
+  animateNumber(document.getElementById('days'),    pad(Math.floor(s/86400)));
+  animateNumber(document.getElementById('hours'),   pad(Math.floor((s%86400)/3600)));
+  animateNumber(document.getElementById('minutes'), pad(Math.floor((s%3600)/60)));
+  animateNumber(document.getElementById('seconds'), pad(s%60));
+  const rangeMs = 365*24*60*60*1000;
+  const startRef = new Date(targetDate-rangeMs);
+  const pct = Math.min(100, Math.max(0,(now-startRef)/(targetDate-startRef))*100);
+  document.getElementById('progress-fill').style.width = pct.toFixed(2)+'%';
+  document.getElementById('progress-pct').textContent = pct.toFixed(1)+'% of the way there';
 }
 
-function launchCountdown(departStr, shipName, theme) {
+function launchCountdown(departStr, shipName, dest) {
   targetDate = parseDepart(departStr);
   if (!targetDate || isNaN(targetDate)) return false;
-
-  applyTheme(theme);
-
+  applyDest(dest);
   document.getElementById('display-ship').textContent = shipName || 'Wonder';
-  document.getElementById('display-date-sub').textContent =
-    'Embarkation · ' + targetDate.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' }) +
-    ' · ' + targetDate.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
-  document.getElementById('badge-date').textContent =
-    targetDate.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' }) +
-    ' at ' + targetDate.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
-
+  const dateStr = targetDate.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const timeStr = targetDate.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  document.getElementById('display-date-sub').textContent = `Embarkation · ${dateStr} · ${timeStr}`;
+  document.getElementById('badge-date').textContent = `${dateStr} at ${timeStr}`;
   document.getElementById('setup-screen').style.display = 'none';
   document.getElementById('main-screen').style.display = 'block';
-
+  document.getElementById('dn-toggle').style.display = 'flex';
   if (countdownInterval) clearInterval(countdownInterval);
-  tick();
-  countdownInterval = setInterval(tick, 1000);
-
+  tick(); countdownInterval = setInterval(tick, 1000);
   setTimeout(initMotion, 800);
   return true;
 }
 
-// ── SETUP FORM ──
-// Theme selector
-document.querySelectorAll('.theme-opt').forEach(opt => {
+// ════ SETUP FORM ════
+document.querySelectorAll('.dest-opt').forEach(opt => {
   opt.addEventListener('click', () => {
-    document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('selected'));
+    document.querySelectorAll('.dest-opt').forEach(o => o.classList.remove('selected'));
     opt.classList.add('selected');
     opt.querySelector('input').checked = true;
   });
@@ -976,93 +766,78 @@ document.querySelectorAll('.theme-opt').forEach(opt => {
 document.getElementById('btn-board').addEventListener('click', () => {
   const ship = document.getElementById('ship-input').value.trim();
   const dateVal = document.getElementById('date-input').value;
-  const theme = document.querySelector('input[name="theme"]:checked')?.value || 'alaska';
+  const dest = document.querySelector('input[name="dest"]:checked')?.value || 'caribbean';
   const errEl = document.getElementById('error-msg');
-
   if (!ship) { errEl.textContent = 'Please enter your ship name.'; return; }
   if (!dateVal) { errEl.textContent = 'Please pick your embarkation date and time.'; return; }
   errEl.textContent = '';
-
   const departCode = encodeDepart(dateVal);
-  setParams(departCode, ship, theme);
-  launchCountdown(departCode, ship, theme);
+  setParams(departCode, ship, dest);
+  launchCountdown(departCode, ship, dest);
 });
 
-// ── CHANGE LINK ──
 document.getElementById('change-link').addEventListener('click', () => {
   document.getElementById('main-screen').style.display = 'none';
+  document.getElementById('dn-toggle').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'flex';
-  // Pre-fill form with current values
-  const { ship, theme } = getParams();
+  const { ship, dest } = getParams();
   if (ship) document.getElementById('ship-input').value = ship;
-  if (theme) {
-    document.querySelectorAll('.theme-opt').forEach(o => {
-      const match = o.dataset.theme === theme;
+  if (dest) {
+    document.querySelectorAll('.dest-opt').forEach(o => {
+      const match = o.dataset.dest === dest;
       o.classList.toggle('selected', match);
       o.querySelector('input').checked = match;
     });
   }
 });
 
-// ── AUTO-LOAD FROM URL ──
+// ════ AUTO-LOAD FROM URL ════
 (function() {
-  const { depart, ship, theme } = getParams();
+  const { depart, ship, dest, mode } = getParams();
+  // set mode first
+  setDayNight(mode === 'day', false);
   if (depart && ship) {
-    launchCountdown(depart, ship, theme || 'alaska');
+    launchCountdown(depart, ship, dest || 'caribbean');
   }
-  // Pre-fill date to a sensible default (tomorrow at 10am)
+  // default date
   const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(10, 0, 0, 0);
-  const pad2 = n => String(n).padStart(2,'0');
+  tomorrow.setDate(tomorrow.getDate()+1); tomorrow.setHours(10,0,0,0);
+  const p2 = n => String(n).padStart(2,'0');
   document.getElementById('date-input').value =
-    `${tomorrow.getFullYear()}-${pad2(tomorrow.getMonth()+1)}-${pad2(tomorrow.getDate())}T10:00`;
+    `${tomorrow.getFullYear()}-${p2(tomorrow.getMonth()+1)}-${p2(tomorrow.getDate())}T10:00`;
 })();
 
-// ── GYROSCOPE ──
-const shipWrap  = document.querySelector('.ship-wrap');
-const waveBack  = document.querySelector('.wave-back');
-const waveMid   = document.querySelector('.wave-mid');
-const waveFront = document.querySelector('.wave-front');
-const motionBtn = document.getElementById('motion-btn');
-let smoothGamma = 0, smoothBeta = 0, gyroActive = false;
-const SMOOTH = 0.08;
+// ════ GYROSCOPE ════
+const shipWrap = document.querySelector('.ship-wrap');
+const waveBack = document.querySelector('.wave-back');
+const waveMid  = document.querySelector('.wave-mid');
+const waveFront= document.querySelector('.wave-front');
+const motionBtn= document.getElementById('motion-btn');
+let smoothGamma=0, smoothBeta=0, gyroActive=false;
+const SMOOTH=0.08;
 
 function onOrientation(e) {
   if (!gyroActive) return;
-  const g = Math.max(-40, Math.min(40, e.gamma ?? 0));
-  const b = Math.max(-30, Math.min(30, (e.beta ?? 45) - 45));
-  smoothGamma += (g - smoothGamma) * SMOOTH;
-  smoothBeta  += (b - smoothBeta)  * SMOOTH;
-  shipWrap.style.transform = `translateX(calc(-50% + ${smoothGamma*1.5}px)) translateY(${smoothBeta*0.6}px) rotate(${smoothGamma*0.35}deg)`;
-  waveBack.style.marginLeft  = `${smoothGamma * 0.8}px`;
-  waveMid.style.marginLeft   = `${smoothGamma * 1.4}px`;
-  waveFront.style.marginLeft = `${smoothGamma * 2.0}px`;
+  const g=Math.max(-40,Math.min(40,e.gamma??0));
+  const b=Math.max(-30,Math.min(30,(e.beta??45)-45));
+  smoothGamma+=(g-smoothGamma)*SMOOTH; smoothBeta+=(b-smoothBeta)*SMOOTH;
+  shipWrap.style.transform=`translateX(calc(-50% + ${smoothGamma*1.5}px)) translateY(${smoothBeta*.6}px) rotate(${smoothGamma*.35}deg)`;
+  waveBack.style.marginLeft=`${smoothGamma*.8}px`;
+  waveMid.style.marginLeft=`${smoothGamma*1.4}px`;
+  waveFront.style.marginLeft=`${smoothGamma*2}px`;
 }
-
 function startGyro() {
-  gyroActive = true;
-  document.body.classList.add('gyro-active');
-  motionBtn.style.display = 'none';
-  window.addEventListener('deviceorientation', onOrientation, true);
+  gyroActive=true; document.body.classList.add('gyro-active'); motionBtn.style.display='none';
+  window.addEventListener('deviceorientation',onOrientation,true);
 }
-
 function initMotion() {
-  if (typeof DeviceOrientationEvent !== 'undefined' &&
-      typeof DeviceOrientationEvent.requestPermission === 'function') {
-    motionBtn.style.display = 'flex';
-    motionBtn.addEventListener('click', () => {
-      DeviceOrientationEvent.requestPermission()
-        .then(s => { if (s === 'granted') startGyro(); })
-        .catch(console.warn);
-    }, { once: true });
+  if (typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function') {
+    motionBtn.style.display='flex';
+    motionBtn.addEventListener('click',()=>{ DeviceOrientationEvent.requestPermission().then(s=>{if(s==='granted')startGyro();}).catch(console.warn); },{once:true});
   } else if (window.DeviceOrientationEvent) {
-    let n = 0;
-    const test = (e) => {
-      if (++n > 3 && e.gamma !== null) { window.removeEventListener('deviceorientation', test, true); startGyro(); }
-      else if (n > 10) window.removeEventListener('deviceorientation', test, true);
-    };
-    window.addEventListener('deviceorientation', test, true);
+    let n=0;
+    const test=(e)=>{ if(++n>3&&e.gamma!==null){window.removeEventListener('deviceorientation',test,true);startGyro();}else if(n>10)window.removeEventListener('deviceorientation',test,true); };
+    window.addEventListener('deviceorientation',test,true);
   }
 }
 </script>
