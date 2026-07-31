@@ -364,6 +364,35 @@ body.day .porthole-number { text-shadow:0 2px 8px rgba(0,0,0,.2); }
 @keyframes pulse { from{opacity:.8} to{opacity:1} }
 
 @media (prefers-reduced-motion:reduce) { *{animation:none!important;transition:none!important} }
+
+/* ── SIGNATURE MODAL ── */
+#sig-modal {
+  display:none; position:fixed; inset:0; z-index:300;
+  align-items:center; justify-content:center; padding:20px;
+  background:rgba(0,0,0,0.7); backdrop-filter:blur(6px);
+}
+#sig-modal.open { display:flex; }
+.sig-card {
+  width:min(560px,100%); background:#0d2240;
+  border:1px solid rgba(255,255,255,0.12); border-radius:16px;
+  padding:28px; box-shadow:0 40px 80px rgba(0,0,0,0.6);
+  animation:cardIn .3s cubic-bezier(.34,1.3,.64,1) both;
+}
+.sig-card h3 { font-family:"Playfair Display",serif; font-size:1.3rem; font-weight:900; color:#fff; margin-bottom:4px; }
+.sig-sub { font-size:.72rem; color:rgba(240,248,255,.4); letter-spacing:.06em; margin-bottom:20px; }
+.sig-preview-wrap { width:100%; border-radius:8px; border:1px solid rgba(255,255,255,.1); margin-bottom:16px; background:rgba(255,255,255,.04); overflow:hidden; }
+.sig-preview-wrap img { width:100%; height:auto; display:block; }
+.sig-tabs { display:flex; gap:6px; margin-bottom:10px; }
+.sig-tab { padding:6px 14px; border-radius:6px; border:1px solid rgba(255,255,255,.12); background:transparent; color:rgba(240,248,255,.5); font-family:"Montserrat",sans-serif; font-size:.72rem; font-weight:600; letter-spacing:.08em; cursor:pointer; transition:all .2s; }
+.sig-tab.active { background:rgba(255,255,255,.1); color:#fff; border-color:rgba(255,255,255,.25); }
+.sig-code-wrap { position:relative; }
+.sig-code { width:100%; background:rgba(0,0,0,.3); border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:12px 50px 12px 12px; color:rgba(240,248,255,.8); font-family:monospace; font-size:.7rem; resize:none; outline:none; line-height:1.5; overflow-x:auto; white-space:nowrap; height:52px; }
+.sig-copy-btn { position:absolute; top:8px; right:8px; background:rgba(79,195,195,.15); border:1px solid rgba(79,195,195,.3); color:#7ee8e8; font-family:"Montserrat",sans-serif; font-size:.65rem; font-weight:700; letter-spacing:.08em; padding:5px 10px; border-radius:5px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.sig-copy-btn:hover { background:rgba(79,195,195,.25); }
+.sig-copy-btn.copied { background:rgba(76,175,80,.2); border-color:rgba(76,175,80,.4); color:#81c784; }
+.sig-hint { font-size:.67rem; color:rgba(240,248,255,.28); margin-top:8px; line-height:1.6; }
+.sig-close-btn { margin-top:16px; width:100%; padding:11px; border-radius:8px; border:1px solid rgba(255,255,255,.12); background:transparent; color:rgba(240,248,255,.5); font-family:"Montserrat",sans-serif; font-size:.78rem; font-weight:600; cursor:pointer; transition:all .2s; }
+.sig-close-btn:hover { border-color:rgba(255,255,255,.25); color:#fff; }
 </style>
 </head>
 <body class="night dest-caribbean">
@@ -481,6 +510,8 @@ body.day .porthole-number { text-shadow:0 2px 8px rgba(0,0,0,.2); }
           <div class="progress-pct" id="progress-pct"></div>
         </div>
         <span class="change-link" id="change-link">✎ Change cruise details</span>
+        <span class="change-link" id="sig-btn" style="margin-top:2px;">🖼 Generate Forum Signature</span>
+        <span class="change-link" id="sig-btn" style="margin-top:2px;">🖼 Generate Forum Signature</span>
       </div>
     </div>
   </div>
@@ -591,6 +622,35 @@ body.day .porthole-number { text-shadow:0 2px 8px rgba(0,0,0,.2); }
   </div>
 
   <button id="motion-btn">🌊 Enable Motion</button>
+</div>
+
+
+<!-- ════ SIGNATURE MODAL ════ -->
+<div id="sig-modal">
+  <div class="sig-card">
+    <h3>🖼 Forum Signature</h3>
+    <p class="sig-sub">COPY THE CODE BELOW AND PASTE INTO YOUR FORUM SIGNATURE</p>
+
+    <div class="sig-preview-wrap">
+      <img id="sig-img" src="" alt="Signature preview" loading="lazy">
+    </div>
+
+    <div class="sig-tabs">
+      <button class="sig-tab active" data-fmt="bbcode">BBCode</button>
+      <button class="sig-tab" data-fmt="html">HTML</button>
+      <button class="sig-tab" data-fmt="markdown">Markdown</button>
+      <button class="sig-tab" data-fmt="url">Image URL</button>
+    </div>
+
+    <div class="sig-code-wrap">
+      <textarea class="sig-code" id="sig-code" readonly spellcheck="false"></textarea>
+      <button class="sig-copy-btn" id="sig-copy-btn">Copy</button>
+    </div>
+
+    <p class="sig-hint" id="sig-hint"></p>
+
+    <button class="sig-close-btn" id="sig-close-btn">✕ Close</button>
+  </div>
 </div>
 
 <script>
@@ -840,6 +900,82 @@ function initMotion() {
     window.addEventListener('deviceorientation',test,true);
   }
 }
+
+// ════ SIGNATURE MODAL ════
+const BASE_URL = 'https://mycruise.fyi';
+
+const HINTS = {
+  bbcode:   'Works on Cruise Critic, Royal Caribbean Blog forums, and most cruise forums. Paste into your forum profile → Signature.',
+  html:     'Works in email signatures (Gmail, Outlook) and any website that allows HTML.',
+  markdown: 'Works on Reddit, GitHub, and Discord (though Discord may not render remote images).',
+  url:      'Direct image URL — use this to manually embed in any system, or upload to Imgur as a static backup.',
+};
+
+let currentFmt = 'bbcode';
+let sigUrl = '';
+
+function buildSigUrl() {
+  const params = getParams();
+  if (!params.depart || !params.ship) return '';
+  const u = new URL(BASE_URL + '/api/sig.png');
+  u.searchParams.set('depart', params.depart);
+  u.searchParams.set('ship', params.ship);
+  u.searchParams.set('dest', params.dest || 'caribbean');
+  return u.toString();
+}
+
+function getSigCode(fmt, url) {
+  switch(fmt) {
+    case 'bbcode':   return `[IMG]${url}[/IMG]`;
+    case 'html':     return `<img src="${url}" alt="My Cruise Countdown" width="600" height="120">`;
+    case 'markdown': return `![My Cruise Countdown](${url})`;
+    case 'url':      return url;
+  }
+}
+
+function updateSigModal() {
+  sigUrl = buildSigUrl();
+  document.getElementById('sig-img').src = sigUrl;
+  document.getElementById('sig-code').value = getSigCode(currentFmt, sigUrl);
+  document.getElementById('sig-hint').textContent = HINTS[currentFmt] || '';
+}
+
+document.getElementById('sig-btn').addEventListener('click', () => {
+  currentFmt = 'bbcode';
+  document.querySelectorAll('.sig-tab').forEach(t => t.classList.toggle('active', t.dataset.fmt === 'bbcode'));
+  updateSigModal();
+  document.getElementById('sig-modal').classList.add('open');
+});
+
+document.querySelectorAll('.sig-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    currentFmt = tab.dataset.fmt;
+    document.querySelectorAll('.sig-tab').forEach(t => t.classList.toggle('active', t === tab));
+    document.getElementById('sig-code').value = getSigCode(currentFmt, sigUrl);
+    document.getElementById('sig-hint').textContent = HINTS[currentFmt] || '';
+    const btn = document.getElementById('sig-copy-btn');
+    btn.textContent = 'Copy'; btn.classList.remove('copied');
+  });
+});
+
+document.getElementById('sig-copy-btn').addEventListener('click', () => {
+  const code = document.getElementById('sig-code').value;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById('sig-copy-btn');
+    btn.textContent = '✓ Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+});
+
+document.getElementById('sig-close-btn').addEventListener('click', () => {
+  document.getElementById('sig-modal').classList.remove('open');
+});
+
+document.getElementById('sig-modal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('sig-modal'))
+    document.getElementById('sig-modal').classList.remove('open');
+});
+
 </script>
 </body>
 </html>
