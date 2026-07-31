@@ -34,46 +34,53 @@ async function fetchFont(url){
   return r.arrayBuffer();
 }
 
-// Build ship out of pure divs — no images, no SVG, fully satori-compatible
-function buildShip(accent) {
-  const h=(type,style,...children)=>({type,props:{style,children:children.length===1?children[0]:children.length===0?undefined:children}});
-  const W = '#ffffff';
-  const G = '#F5C842';
+// h helper — satori needs children as array or single value, never undefined
+function h(type, style, ...children){
+  const c = children.length === 0 ? undefined : children.length === 1 ? children[0] : children;
+  return { type, props: { style, children: c } };
+}
 
-  return h('div',{position:'relative',width:'150px',height:'110px',display:'flex',alignItems:'flex-end',justifyContent:'center'},
-    // smoke puffs
-    h('div',{position:'absolute',top:'2px',left:'74px',width:'10px',height:'10px',borderRadius:'5px',background:'rgba(255,255,255,0.15)'}),
-    h('div',{position:'absolute',top:'0px',left:'82px',width:'8px',height:'8px',borderRadius:'4px',background:'rgba(255,255,255,0.1)'}),
+// Ship built purely with nested flex — no position:absolute
+function buildShip(accent){
+  const W = 'rgba(255,255,255,0.92)';
+  const G = '#F5C842';
+  const win = h('div',{width:'10px',height:'9px',borderRadius:'1px',background:'rgba(10,40,100,0.65)',marginRight:'3px'});
+  const win2= h('div',{width:'9px', height:'8px',borderRadius:'1px',background:'rgba(10,40,100,0.6)', marginRight:'2px'});
+
+  return h('div',{display:'flex',flexDirection:'column',alignItems:'center',width:'150px',gap:'0px'},
+    // smoke row
+    h('div',{display:'flex',flexDirection:'row',alignItems:'flex-end',gap:'3px',marginBottom:'1px',marginLeft:'10px'},
+      h('div',{width:'9px',height:'9px',borderRadius:'5px',background:'rgba(255,255,255,0.18)'}),
+      h('div',{width:'7px',height:'7px',borderRadius:'4px',background:'rgba(255,255,255,0.12)'}),
+      h('div',{width:'6px',height:'6px',borderRadius:'3px',background:'rgba(255,255,255,0.08)'}),
+    ),
     // funnel
-    h('div',{position:'absolute',top:'12px',left:'70px',width:'14px',height:'18px',borderRadius:'3px 3px 0 0',background:W,opacity:'0.9'}),
-    // funnel stripe
-    h('div',{position:'absolute',top:'20px',left:'70px',width:'14px',height:'5px',background:G,opacity:'0.9'}),
-    // bridge top
-    h('div',{position:'absolute',top:'28px',left:'52px',width:'54px',height:'18px',borderRadius:'3px 3px 0 0',background:W,opacity:'0.85'}),
-    // bridge windows
-    h('div',{position:'absolute',top:'31px',left:'57px',width:'9px',height:'8px',borderRadius:'1px',background:'rgba(20,60,120,0.7)'}),
-    h('div',{position:'absolute',top:'31px',left:'70px',width:'9px',height:'8px',borderRadius:'1px',background:'rgba(20,60,120,0.7)'}),
-    h('div',{position:'absolute',top:'31px',left:'83px',width:'9px',height:'8px',borderRadius:'1px',background:'rgba(20,60,120,0.7)'}),
+    h('div',{display:'flex',flexDirection:'column',alignItems:'center',marginLeft:'8px'},
+      h('div',{width:'14px',height:'12px',borderRadius:'2px 2px 0 0',background:W}),
+      h('div',{width:'14px',height:'4px',background:G}),
+    ),
+    // bridge
+    h('div',{display:'flex',flexDirection:'column',alignItems:'center'},
+      h('div',{width:'60px',height:'15px',borderRadius:'2px 2px 0 0',background:W,
+        display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center',gap:'3px',paddingTop:'3px'},
+        win2, win2, win2, win2,
+      ),
+    ),
     // superstructure
-    h('div',{position:'absolute',top:'44px',left:'34px',width:'90px',height:'22px',borderRadius:'2px 2px 0 0',background:W,opacity:'0.85'}),
-    // super windows row
-    h('div',{position:'absolute',top:'48px',left:'40px',width:'10px',height:'9px',borderRadius:'1px',background:'rgba(20,60,120,0.6)'}),
-    h('div',{position:'absolute',top:'48px',left:'55px',width:'10px',height:'9px',borderRadius:'1px',background:'rgba(20,60,120,0.6)'}),
-    h('div',{position:'absolute',top:'48px',left:'70px',width:'10px',height:'9px',borderRadius:'1px',background:'rgba(20,60,120,0.6)'}),
-    h('div',{position:'absolute',top:'48px',left:'85px',width:'10px',height:'9px',borderRadius:'1px',background:'rgba(20,60,120,0.6)'}),
-    h('div',{position:'absolute',top:'48px',left:'100px',width:'10px',height:'9px',borderRadius:'1px',background:'rgba(20,60,120,0.6)'}),
-    // hull
-    h('div',{position:'absolute',top:'64px',left:'10px',width:'130px',height:'22px',borderRadius:'2px 2px 6px 6px',background:W,opacity:'0.9'}),
-    // gold waterline stripe
-    h('div',{position:'absolute',top:'78px',left:'14px',width:'118px',height:'3px',background:G,opacity:'0.85'}),
-    // bow tip
-    h('div',{position:'absolute',top:'66px',left:'136px',width:'14px',height:'18px',borderRadius:'0 6px 6px 0',background:W,opacity:'0.75'}),
-    // water wave 1
-    h('div',{position:'absolute',top:'88px',left:'0px',width:'155px',height:'12px',borderRadius:'50%',background:accent,opacity:'0.15'}),
-    // water wave 2
-    h('div',{position:'absolute',top:'94px',left:'10px',width:'135px',height:'10px',borderRadius:'50%',background:accent,opacity:'0.1'}),
-    // anchor text on hull
-    h('div',{position:'absolute',top:'67px',left:'68px',fontSize:'10px',color:G,opacity:'0.5',fontFamily:'Montserrat'},'⚓'),
+    h('div',{width:'100px',height:'18px',borderRadius:'2px 2px 0 0',background:W,
+      display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center',gap:'3px',paddingTop:'3px'},
+      win, win, win, win, win,
+    ),
+    // hull + waterline
+    h('div',{display:'flex',flexDirection:'column',alignItems:'center',width:'100%'},
+      h('div',{width:'138px',height:'18px',borderRadius:'2px 2px 5px 5px',background:W,
+        display:'flex',alignItems:'flex-end',paddingBottom:'3px',justifyContent:'center'},
+        h('div',{width:'120px',height:'3px',background:G,borderRadius:'1px'}),
+      ),
+    ),
+    // water
+    h('div',{width:'150px',height:'10px',borderRadius:'0 0 8px 8px',
+      background:`linear-gradient(180deg, ${accent}30 0%, ${accent}10 100%)`}),
   );
 }
 
@@ -95,24 +102,23 @@ export async function onRequest(context){
       fetchFont('https://fonts.gstatic.com/s/montserrat/v26/JTUFjIg1_i6t8kCHKm459Wx7xQYXK0vOoz6jq6R9WXh0oA.woff'),
     ]);
 
-    const h=(type,style,...children)=>({type,props:{style,children:children.length===1?children[0]:children.length===0?undefined:children}});
-
-    // countdown unit box
+    // countdown unit
     const unit=(num,lbl)=>h('div',
       {display:'flex',flexDirection:'column',alignItems:'center',gap:'2px'},
       h('div',{
         display:'flex',alignItems:'center',justifyContent:'center',
-        width:'52px',height:'46px',
+        width:'52px',height:'44px',
         background:'rgba(255,255,255,0.07)',
-        border:`1px solid rgba(255,255,255,0.15)`,
-        borderRadius:'8px',
+        border:'1px solid rgba(255,255,255,0.14)',
+        borderRadius:'7px',
       },
-        h('span',{fontSize:'22px',fontWeight:700,color:'#F5C842',fontFamily:'Montserrat',lineHeight:'1'},num)
+        h('span',{fontSize:'21px',fontWeight:700,color:'#F5C842',fontFamily:'Montserrat'},num)
       ),
-      h('span',{fontSize:'7px',fontWeight:700,color:'rgba(255,255,255,0.35)',letterSpacing:'1.5px',fontFamily:'Montserrat'},lbl)
+      h('span',{fontSize:'7px',fontWeight:700,color:'rgba(255,255,255,0.32)',letterSpacing:'1.5px',fontFamily:'Montserrat'},lbl)
     );
 
-    const sep=h('span',{fontSize:'18px',color:'rgba(255,255,255,0.18)',fontFamily:'Montserrat',paddingBottom:'16px'},':');
+    const sep=()=>h('span',{fontSize:'16px',color:'rgba(255,255,255,0.15)',fontFamily:'Montserrat',
+      display:'flex',alignItems:'center',height:'44px',paddingBottom:'14px'},':');
 
     const banner=h('div',{
       width:'600px',height:'130px',
@@ -120,71 +126,66 @@ export async function onRequest(context){
       background:`linear-gradient(135deg, ${dest.bg1} 0%, ${dest.bg2} 100%)`,
       borderRadius:'12px',
       overflow:'hidden',
-      fontFamily:'Montserrat',
     },
       // LEFT: ship panel
       h('div',{
-        width:'175px',height:'130px',
+        width:'168px',height:'130px',
         display:'flex',alignItems:'center',justifyContent:'center',
-        borderRight:'1px solid rgba(255,255,255,0.07)',
-        background:'rgba(0,0,0,0.15)',
-        overflow:'hidden',
-        position:'relative',
+        borderRight:'1px solid rgba(255,255,255,0.06)',
+        background:'rgba(0,0,0,0.18)',
       },
-        // glow
-        h('div',{position:'absolute',width:'100px',height:'100px',borderRadius:'50px',background:dest.accent,opacity:'0.07'}),
         buildShip(dest.accent)
       ),
 
-      // RIGHT: info + countdown
+      // RIGHT: text + countdown
       h('div',{
         display:'flex',flexDirection:'column',justifyContent:'center',
-        padding:'10px 14px 10px 18px',
-        flex:1,gap:'5px',
+        padding:'10px 8px 10px 16px',
+        flex:1,
+        gap:'4px',
       },
         // destination pill
-        h('div',{display:'flex',flexDirection:'row',alignItems:'center'},
-          h('div',{
-            display:'flex',alignItems:'center',
-            background:dest.accent,
-            borderRadius:'20px',
-            padding:'2px 10px',
-          },
-            h('span',{fontSize:'7px',fontWeight:700,color:dest.bg1,letterSpacing:'1.5px',fontFamily:'Montserrat'},
-              dest.emoji+'  '+dest.label.toUpperCase()
-            )
+        h('div',{
+          display:'flex',flexDirection:'row',alignItems:'center',
+          background:dest.accent,
+          borderRadius:'20px',
+          padding:'2px 10px',
+          width:'fit-content',
+        },
+          h('span',{fontSize:'7px',fontWeight:700,color:dest.bg1,letterSpacing:'1.5px',fontFamily:'Montserrat'},
+            dest.emoji+'  '+dest.label.toUpperCase()
           )
         ),
 
-        // ship name
+        // ship name row
         h('div',{display:'flex',flexDirection:'row',alignItems:'baseline',gap:'4px'},
-          h('span',{fontSize:'10px',color:'rgba(255,255,255,0.4)',fontFamily:'Montserrat'},'The'),
-          h('span',{fontSize:'19px',fontWeight:700,color:'#ffffff',fontFamily:'Montserrat',lineHeight:'1.15'},ship),
+          h('span',{fontSize:'10px',color:'rgba(255,255,255,0.38)',fontFamily:'Montserrat'},'The'),
+          h('span',{fontSize:'18px',fontWeight:700,color:'#ffffff',fontFamily:'Montserrat'},ship),
           h('span',{fontSize:'10px',color:'#F5C842',fontFamily:'Montserrat'},'of the Seas'),
         ),
 
         // sail date
-        h('span',{fontSize:'8px',color:'rgba(255,255,255,0.3)',letterSpacing:'0.5px',fontFamily:'Montserrat'},
-          '⚓  Sails '+dateLabel+'   ·   mycruise.fyi'
+        h('span',{fontSize:'8px',color:'rgba(255,255,255,0.28)',letterSpacing:'0.4px',fontFamily:'Montserrat'},
+          'Sails '+dateLabel+'  ·  mycruise.fyi'
         ),
 
-        // countdown
+        // countdown row
         cd.departed
-          ? h('span',{fontSize:'16px',fontWeight:700,color:'#F5C842',fontFamily:'Montserrat'},'🛳  Bon Voyage!')
-          : h('div',{display:'flex',flexDirection:'row',alignItems:'center',gap:'4px',marginTop:'1px'},
-              unit(cd.days,'DAYS'), sep,
-              unit(cd.hours,'HRS'), sep,
-              unit(cd.minutes,'MIN'), sep,
+          ? h('span',{fontSize:'15px',fontWeight:700,color:'#F5C842',fontFamily:'Montserrat'},'Bon Voyage!')
+          : h('div',{display:'flex',flexDirection:'row',alignItems:'center',gap:'3px'},
+              unit(cd.days,'DAYS'), sep(),
+              unit(cd.hours,'HRS'),  sep(),
+              unit(cd.minutes,'MIN'),sep(),
               unit(cd.seconds,'SEC'),
             ),
       ),
 
-      // accent bar on right edge
-      h('div',{width:'4px',height:'130px',background:dest.accent,opacity:'0.4'}),
+      // accent stripe
+      h('div',{width:'4px',height:'130px',background:dest.accent,opacity:'0.45'}),
     );
 
     const svg=await satori(banner,{
-      width:600,height:130,
+      width:600, height:130,
       fonts:[
         {name:'Montserrat',data:fontReg, weight:400,style:'normal'},
         {name:'Montserrat',data:fontBold,weight:700,style:'normal'},
@@ -200,13 +201,9 @@ export async function onRequest(context){
     });
 
   }catch(err){
-    console.error('sig error:',err?.message||err);
-    const fallback=`<svg width="600" height="130" xmlns="http://www.w3.org/2000/svg">
-      <rect width="600" height="130" rx="12" fill="${dest.bg1}"/>
-      <text x="300" y="52" text-anchor="middle" font-family="serif" font-size="15" fill="${dest.accent}">${dest.emoji} ${ship} of the Seas</text>
-      <text x="300" y="78" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#F5C842">${cd.days}d  ${cd.hours}h  ${cd.minutes}m  ${cd.seconds}s</text>
-      <text x="300" y="100" text-anchor="middle" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,0.25)">Sails ${dateLabel}  ·  mycruise.fyi</text>
-    </svg>`;
-    return new Response(fallback,{headers:{'Content-Type':'image/svg+xml','Cache-Control':'public, max-age=60','Access-Control-Allow-Origin':'*'}});
+    // Return error as plain text so we can see what's wrong
+    return new Response('ERROR: '+(err?.message||String(err)),{
+      headers:{'Content-Type':'text/plain','Access-Control-Allow-Origin':'*'},
+    });
   }
 }
