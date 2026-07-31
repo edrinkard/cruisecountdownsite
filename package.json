@@ -1,0 +1,17 @@
+{
+  "name": "mycruise-fyi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cruise countdown site with dynamic signature images",
+  "dependencies": {
+    "satori": "^0.10.13",
+    "@resvg/resvg-wasm": "^2.6.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  },
+  "scripts": {
+    "dev": "wrangler pages dev . --compatibility-flag=nodejs_compat",
+    "deploy": "wrangler pages deploy ."
+  }
+}
