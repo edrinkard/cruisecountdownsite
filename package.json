@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "satori": "^0.10.13",
-    "@fontsource/montserrat": "^5.0.0"
+    "satori": "^0.10.13"
   }
 }
